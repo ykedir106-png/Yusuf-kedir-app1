@@ -1,1676 +1,1963 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <meta name="theme-color" content="#0b6b4f">
-  <meta name="description" content="Yusuf Kedir App — Professional Portfolio">
-  <meta name="author" content="Yusuf Kedir">
-
-  <link rel="manifest" href="manifest.json">
-
-  <title>Yusuf Kedir App</title>
-
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root{
-      --bg:#f5f8f6;
-      --card:#ffffff;
-      --text:#10231c;
-      --muted:#64746d;
-      --primary:#0b6b4f;
-      --primary2:#0e8a65;
-      --gold:#c99a35;
-      --border:#dce7e1;
-      --danger:#b42318;
-      --shadow:0 18px 50px rgba(16,35,28,.09);
-    }
-
-    *{
-      box-sizing:border-box;
-      scroll-behavior:smooth;
-    }
-
-    body{
-      margin:0;
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.65;
-    }
-
-    body.dark{
-      --bg:#08120f;
-      --card:#0e1d18;
-      --text:#edf7f2;
-      --muted:#a9bbb3;
-      --border:#20382f;
-      --shadow:0 18px 50px rgba(0,0,0,.3);
-    }
-
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
-
-    button,
-    input,
-    textarea,
-    select{
-      font:inherit;
-    }
-
-    button{
-      cursor:pointer;
-    }
-
-    .container{
-      width:min(1160px,92%);
-      margin:auto;
-    }
-
-    /* NAVIGATION */
-
-    .nav{
-      position:sticky;
-      top:0;
-      z-index:50;
-      background:rgba(255,255,255,.9);
-      backdrop-filter:blur(14px);
-      border-bottom:1px solid var(--border);
-    }
-
-    body.dark .nav{
-      background:rgba(14,29,24,.9);
-    }
-
-    .navin{
-      min-height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .logo{
-      width:44px;
-      height:44px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--primary),var(--gold));
-      color:white;
-      font-weight:900;
-      box-shadow:0 8px 25px rgba(11,107,79,.25);
-    }
-
-    .links{
-      display:flex;
-      gap:6px;
-      align-items:center;
-    }
-
-    .links a{
-      padding:9px 11px;
-      border-radius:10px;
-    }
-
-    .links a:hover{
-      background:var(--border);
-    }
-
-    .actions{
-      display:flex;
-      gap:7px;
-      align-items:center;
-    }
-
-    .iconbtn{
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      border-radius:10px;
-      padding:9px 11px;
-    }
-
-    .hamb{
-      display:none;
-    }
-
-    /* HERO */
-
-    section{
-      padding:88px 0;
-    }
-
-    .hero{
-      min-height:calc(100vh - 70px);
-      display:grid;
-      place-items:center;
-      background:
-        radial-gradient(
-          circle at 85% 15%,
-          rgba(201,154,53,.16),
-          transparent 28%
-        ),
-        radial-gradient(
-          circle at 10% 70%,
-          rgba(11,107,79,.14),
-          transparent 30%
-        );
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:45px;
-      align-items:center;
-    }
-
-    .eyebrow{
-      color:var(--primary);
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    h1{
-      font-size:clamp(2.6rem,7vw,5.5rem);
-      line-height:1.03;
-      margin:15px 0;
-    }
-
-    .gradient{
-      background:linear-gradient(90deg,var(--primary),var(--gold));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    h2{
-      font-size:clamp(2rem,4vw,3rem);
-      margin:0 0 12px;
-    }
-
-    .lead{
-      font-size:1.15rem;
-      color:var(--muted);
-      max-width:720px;
-    }
-
-    .hero-card{
-      background:var(--card);
-      border:1px solid var(--border);
-      padding:28px;
-      border-radius:28px;
-      box-shadow:var(--shadow);
-      animation:float 5s ease-in-out infinite;
-    }
-
-    .avatar{
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      margin:auto;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--primary),var(--gold));
-      color:white;
-      font-size:3rem;
-      font-weight:900;
-    }
-
-    .hero-btns{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:25px;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      border:0;
-      border-radius:12px;
-      padding:12px 17px;
-      font-weight:800;
-      background:var(--primary);
-      color:white;
-    }
-
-    .btn:hover{
-      background:var(--primary2);
-      transform:translateY(-1px);
-    }
-
-    .btn.alt{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .btn.gold{
-      background:var(--gold);
-      color:#16120a;
-    }
-
-    .btn.danger{
-      background:var(--danger);
-    }
-
-    /* GENERAL */
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      align-items:end;
-      margin-bottom:28px;
-    }
-
-    .muted{
-      color:var(--muted);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:18px;
-    }
-
-    .grid2{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:18px;
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:22px;
-      box-shadow:var(--shadow);
-    }
-
-    .card h3{
-      margin-top:0;
-    }
-
-    .tags{
-      display:flex;
-      gap:7px;
-      flex-wrap:wrap;
-    }
-
-    .tag{
-      background:var(--border);
-      padding:4px 9px;
-      border-radius:99px;
-      font-size:.8rem;
-    }
-
-    /* PROJECTS */
-
-    .project-img,
-    .post-img{
-      width:100%;
-      aspect-ratio:16/9;
-      object-fit:cover;
-      border-radius:14px;
-      background:var(--border);
-    }
-
-    /* GALLERY */
-
-    .gallery{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-    }
-
-    .gallery img{
-      width:100%;
-      aspect-ratio:1;
-      object-fit:cover;
-      border-radius:16px;
-      cursor:pointer;
-      transition:.3s;
-    }
-
-    .gallery img:hover{
-      transform:scale(1.025);
-    }
-
-    /* SKILLS */
-
-    .skills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .skill{
-      padding:10px 14px;
-      border:1px solid var(--border);
-      background:var(--card);
-      border-radius:12px;
-    }
-
-    /* FORMS */
-
-    form{
-      display:grid;
-      gap:12px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    label{
-      font-weight:700;
-      font-size:.9rem;
-      display:block;
-      margin-bottom:5px;
-    }
-
-    .field{
-      width:100%;
-      padding:12px 13px;
-      border:1px solid var(--border);
-      border-radius:11px;
-      background:var(--bg);
-      color:var(--text);
-      outline:none;
-    }
-
-    .field:focus{
-      border-color:var(--primary);
-    }
-
-    .searchbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .searchbar .field{
-      max-width:360px;
-    }
-
-    .empty{
-      padding:30px;
-      text-align:center;
-      border:1px dashed var(--border);
-      border-radius:16px;
-      color:var(--muted);
-      grid-column:1/-1;
-    }
-
-    /* ADMIN */
-
-    .admin{
-      background:
-        linear-gradient(
-          180deg,
-          rgba(11,107,79,.07),
-          transparent
-        );
-    }
-
-    .admin-grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-      margin-bottom:20px;
-    }
-
-    .stat{
-      padding:18px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      background:var(--card);
-    }
-
-    .stat b{
-      font-size:2rem;
-      display:block;
-    }
-
-    .admin-tabs{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin:20px 0;
-    }
-
-    .tab{
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      padding:9px 13px;
-      border-radius:10px;
-    }
-
-    .tab.active{
-      background:var(--primary);
-      color:white;
-    }
-
-    .admin-panel{
-      display:none;
-    }
-
-    .admin-panel.active{
-      display:block;
-    }
-
-    .item-row{
-      display:flex;
-      justify-content:space-between;
-      gap:15px;
-      align-items:center;
-      padding:14px 0;
-      border-bottom:1px solid var(--border);
-    }
-
-    .item-actions{
-      display:flex;
-      gap:7px;
-      flex-wrap:wrap;
-    }
-
-    /* MODAL */
-
-    .modal{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.7);
-      z-index:90;
-      display:none;
-      place-items:center;
-      padding:20px;
-    }
-
-    .modal.show{
-      display:grid;
-    }
-
-    .modal-box{
-      width:min(650px,100%);
-      max-height:90vh;
-      overflow:auto;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:22px;
-      padding:22px;
-    }
-
-    .modal-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    .close{
-      border:0;
-      background:transparent;
-      color:var(--text);
-      font-size:1.5rem;
-    }
-
-    .lightbox img{
-      max-width:90vw;
-      max-height:80vh;
-      border-radius:16px;
-    }
-
-    /* TOAST */
-
-    .toast{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      z-index:100;
-      padding:13px 17px;
-      background:var(--text);
-      color:var(--bg);
-      border-radius:12px;
-      display:none;
-      max-width:360px;
-    }
-
-    .toast.show{
-      display:block;
-      animation:fade .2s;
-    }
-
-    .hidden{
-      display:none!important;
-    }
-
-    .small{
-      font-size:.85rem;
-    }
-
-    /* FOOTER */
-
-    footer{
-      padding:35px 0;
-      border-top:1px solid var(--border);
-      text-align:center;
-      color:var(--muted);
-    }
-
-    /* ANIMATION */
-
-    @keyframes float{
-      50%{
-        transform:translateY(-7px);
-      }
-    }
-
-    @keyframes fade{
-      from{
-        opacity:0;
-        transform:translateY(5px);
-      }
-      to{
-        opacity:1;
-        transform:none;
-      }
-    }
-
-    /* RESPONSIVE */
-
-    @media(max-width:900px){
-
-      .hero-grid,
-      .grid2{
-        grid-template-columns:1fr;
-      }
-
-      .grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .gallery{
-        grid-template-columns:repeat(3,1fr);
-      }
-
-      .admin-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .links{
-        display:none;
-        position:absolute;
-        top:70px;
-        left:0;
-        right:0;
-        background:var(--card);
-        padding:12px;
-        flex-direction:column;
-        border-bottom:1px solid var(--border);
-      }
-
-      .links.open{
-        display:flex;
-      }
-
-      .links a{
-        width:100%;
-      }
-
-      .hamb{
-        display:block;
-      }
-    }
-
-    @media(max-width:560px){
-
-      section{
-        padding:65px 0;
-      }
-
-      .grid,
-      .gallery,
-      .admin-grid,
-      .row{
-        grid-template-columns:1fr;
-      }
-
-      .hero-card{
-        padding:20px;
-      }
-
-      .navin{
-        min-height:62px;
-      }
-
-      .links{
-        top:62px;
-      }
-
-      h1{
-        font-size:3rem;
-      }
-
-      .actions .lang{
-        display:none;
-      }
-    }
-  </style>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>Yusuf Kedir | Portfolio</title>
+
+<meta
+  name="description"
+  content="Yusuf Kedir - Web Developer, Programmer and Technology Enthusiast"
+>
+
+<meta
+  name="theme-color"
+  content="#2563eb"
+>
+
+<link
+  rel="manifest"
+  href="./manifest.json"
+>
+
+<link
+  rel="icon"
+  href="./icons/icon-192.png"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:#f8fafc;
+  color:#0f172a;
+
+  line-height:1.6;
+
+  transition:
+    background .3s,
+    color .3s;
+}
+
+body.dark{
+  background:#020617;
+  color:#e2e8f0;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.container{
+  width:min(1150px,92%);
+  margin:auto;
+}
+
+
+/* NAVBAR */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  background:rgba(255,255,255,.92);
+
+  backdrop-filter:blur(15px);
+
+  border-bottom:
+    1px solid #e2e8f0;
+}
+
+body.dark header{
+  background:rgba(2,6,23,.92);
+  border-color:#1e293b;
+}
+
+.navbar{
+  min-height:70px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+
+  color:#2563eb;
+}
+
+.nav-links{
+  display:flex;
+  gap:25px;
+  align-items:center;
+}
+
+.nav-links a{
+  font-weight:600;
+  font-size:14px;
+}
+
+.nav-links a:hover{
+  color:#2563eb;
+}
+
+.nav-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.icon-btn{
+  border:0;
+  background:transparent;
+  font-size:20px;
+  padding:8px;
+}
+
+.menu-btn{
+  display:none;
+}
+
+
+/* HERO */
+
+.hero{
+  min-height:90vh;
+
+  display:flex;
+  align-items:center;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(37,99,235,.16),
+      transparent 35%
+    );
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:
+    1.2fr
+    .8fr;
+
+  gap:50px;
+  align-items:center;
+}
+
+.hero h1{
+  font-size:
+    clamp(42px,7vw,78px);
+
+  line-height:1.05;
+  margin-bottom:20px;
+}
+
+.gradient-text{
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #7c3aed
+    );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+
+  color:transparent;
+}
+
+.hero p{
+  font-size:19px;
+  color:#64748b;
+  max-width:650px;
+  margin-bottom:30px;
+}
+
+body.dark .hero p{
+  color:#94a3b8;
+}
+
+.hero-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  border:0;
+  border-radius:12px;
+
+  padding:13px 20px;
+
+  font-weight:700;
+
+  transition:.25s;
+}
+
+.btn-primary{
+  background:#2563eb;
+  color:white;
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  background:#1d4ed8;
+}
+
+.btn-secondary{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+
+body.dark .btn-secondary{
+  background:#1e293b;
+  color:#e2e8f0;
+}
+
+.btn-danger{
+  background:#dc2626;
+  color:white;
+}
+
+.btn-small{
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:13px;
+}
+
+.hero-card{
+  display:flex;
+  justify-content:center;
+}
+
+.profile-card{
+  width:min(330px,100%);
+
+  padding:12px;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #7c3aed
+    );
+
+  box-shadow:
+    0 25px 70px
+    rgba(37,99,235,.25);
+}
+
+.profile-card-inner{
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+body.dark .profile-card-inner{
+  background:#0f172a;
+}
+
+.profile-card img{
+  width:100%;
+  height:390px;
+  object-fit:cover;
+  display:block;
+}
+
+.profile-placeholder{
+  height:390px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:80px;
+}
+
+
+/* SECTIONS */
+
+section{
+  padding:90px 0;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:45px;
+}
+
+.section-title h2{
+  font-size:38px;
+  margin-bottom:10px;
+}
+
+.section-title p{
+  color:#64748b;
+}
+
+body.dark .section-title p{
+  color:#94a3b8;
+}
+
+
+/* ABOUT */
+
+.about-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:20px;
+}
+
+.card{
+  background:white;
+
+  border:
+    1px solid #e2e8f0;
+
+  border-radius:18px;
+
+  padding:25px;
+
+  box-shadow:
+    0 10px 30px
+    rgba(15,23,42,.05);
+}
+
+body.dark .card{
+  background:#0f172a;
+  border-color:#1e293b;
+
+  box-shadow:none;
+}
+
+.card-icon{
+  font-size:35px;
+  margin-bottom:12px;
+}
+
+.card h3{
+  margin-bottom:8px;
+}
+
+
+/* SKILLS */
+
+.skills{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+}
+
+.skill{
+  padding:10px 16px;
+
+  border-radius:999px;
+
+  background:#dbeafe;
+  color:#1e40af;
+
+  font-weight:700;
+}
+
+body.dark .skill{
+  background:#172554;
+  color:#bfdbfe;
+}
+
+
+/* PROJECTS */
+
+.grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:22px;
+}
+
+.project-image{
+  width:100%;
+  height:200px;
+
+  object-fit:cover;
+
+  border-radius:12px;
+
+  margin-bottom:15px;
+}
+
+.project-card h3{
+  margin-bottom:8px;
+}
+
+.project-card p{
+  color:#64748b;
+  margin-bottom:15px;
+}
+
+body.dark .project-card p{
+  color:#94a3b8;
+}
+
+.card-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+
+/* BLOG */
+
+.post-card{
+  overflow:hidden;
+}
+
+.post-image{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.post-meta{
+  color:#64748b;
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+
+/* GALLERY */
+
+.gallery{
+  columns:3 250px;
+  column-gap:18px;
+}
+
+.gallery-item{
+  break-inside:avoid;
+  margin-bottom:18px;
+  position:relative;
+}
+
+.gallery-item img{
+  width:100%;
+  display:block;
+  border-radius:15px;
+  cursor:pointer;
+}
+
+.gallery-title{
+  padding:8px 3px;
+  font-weight:600;
+}
+
+
+/* GITHUB */
+
+.github-box{
+  text-align:center;
+}
+
+.github-form{
+  display:flex;
+  max-width:600px;
+  margin:20px auto;
+  gap:10px;
+}
+
+.github-form input{
+  flex:1;
+}
+
+.github-repos{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:18px;
+  margin-top:25px;
+}
+
+
+/* CONTACT */
+
+.contact-grid{
+  display:grid;
+
+  grid-template-columns:
+    .8fr
+    1.2fr;
+
+  gap:30px;
+}
+
+.contact-info{
+  display:grid;
+  gap:15px;
+}
+
+.contact-item{
+  padding:20px;
+
+  border-radius:15px;
+
+  background:#eff6ff;
+}
+
+body.dark .contact-item{
+  background:#0f172a;
+}
+
+.form{
+  display:grid;
+  gap:14px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+
+  border:
+    1px solid #cbd5e1;
+
+  background:white;
+
+  color:#0f172a;
+
+  padding:13px 14px;
+
+  border-radius:10px;
+
+  outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#2563eb;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+  background:#020617;
+  color:#e2e8f0;
+  border-color:#334155;
+}
+
+textarea{
+  min-height:150px;
+  resize:vertical;
+}
+
+
+/* ADMIN */
+
+.admin-section{
+  background:#f1f5f9;
+}
+
+body.dark .admin-section{
+  background:#020617;
+}
+
+.admin-login{
+  max-width:500px;
+  margin:auto;
+}
+
+.admin-title{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.dashboard{
+  display:grid;
+  gap:25px;
+}
+
+.admin-stats{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:15px;
+}
+
+.stat{
+  background:white;
+
+  border:
+    1px solid #e2e8f0;
+
+  border-radius:15px;
+
+  padding:20px;
+
+  text-align:center;
+}
+
+body.dark .stat{
+  background:#0f172a;
+  border-color:#1e293b;
+}
+
+.stat strong{
+  display:block;
+  font-size:30px;
+  color:#2563eb;
+}
+
+.admin-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.admin-tab{
+  border:0;
+  padding:10px 14px;
+  border-radius:8px;
+  background:#e2e8f0;
+}
+
+body.dark .admin-tab{
+  background:#1e293b;
+  color:#e2e8f0;
+}
+
+.admin-tab.active{
+  background:#2563eb;
+  color:white;
+}
+
+.admin-panel{
+  display:none;
+}
+
+.admin-panel.active{
+  display:block;
+}
+
+.admin-list{
+  display:grid;
+  gap:15px;
+  margin-top:20px;
+}
+
+.admin-item{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+
+  padding:18px;
+
+  background:white;
+
+  border:
+    1px solid #e2e8f0;
+
+  border-radius:12px;
+}
+
+body.dark .admin-item{
+  background:#0f172a;
+  border-color:#1e293b;
+}
+
+.admin-item-content{
+  flex:1;
+}
+
+.admin-item-actions{
+  display:flex;
+  gap:7px;
+  align-items:flex-start;
+}
+
+.message-box{
+  white-space:pre-wrap;
+}
+
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+
+  background:rgba(0,0,0,.75);
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  z-index:3000;
+
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(700px,100%);
+  max-height:90vh;
+  overflow:auto;
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:25px;
+}
+
+body.dark .modal-box{
+  background:#0f172a;
+}
+
+.modal-close{
+  float:right;
+
+  border:0;
+  background:transparent;
+
+  font-size:25px;
+}
+
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+
+  left:50%;
+  bottom:25px;
+
+  transform:
+    translate(-50%,100px);
+
+  background:#0f172a;
+  color:white;
+
+  padding:13px 20px;
+
+  border-radius:10px;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:.3s;
+
+  z-index:5000;
+}
+
+.toast.show{
+  opacity:1;
+  transform:
+    translate(-50%,0);
+}
+
+
+/* FOOTER */
+
+footer{
+  padding:35px 0;
+
+  border-top:
+    1px solid #e2e8f0;
+
+  text-align:center;
+
+  color:#64748b;
+}
+
+body.dark footer{
+  border-color:#1e293b;
+  color:#94a3b8;
+}
+
+
+/* UTILITY */
+
+.hidden{
+  display:none !important;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#64748b;
+}
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+  .nav-links{
+    display:none;
+
+    position:absolute;
+
+    top:70px;
+    left:0;
+    right:0;
+
+    background:white;
+
+    padding:20px;
+
+    flex-direction:column;
+
+    border-bottom:
+      1px solid #e2e8f0;
+  }
+
+  body.dark .nav-links{
+    background:#020617;
+    border-color:#1e293b;
+  }
+
+  .nav-links.show{
+    display:flex;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .hero-grid{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .hero-buttons{
+    justify-content:center;
+  }
+
+  .about-grid,
+  .grid,
+  .github-repos{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .contact-grid{
+    grid-template-columns:1fr;
+  }
+
+  .admin-stats{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+}
+
+
+@media(max-width:600px){
+
+  section{
+    padding:65px 0;
+  }
+
+  .hero{
+    min-height:auto;
+    padding:80px 0;
+  }
+
+  .hero h1{
+    font-size:45px;
+  }
+
+  .about-grid,
+  .grid,
+  .github-repos{
+    grid-template-columns:1fr;
+  }
+
+  .github-form{
+    flex-direction:column;
+  }
+
+  .admin-stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .admin-item{
+    flex-direction:column;
+  }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
 
-<nav class="nav">
-  <div class="container navin">
+<!-- NAVBAR -->
 
-    <a class="brand" href="#home">
-      <span class="logo">YK</span>
-      <span>Yusuf Kedir App</span>
-    </a>
+<header>
 
-    <div class="links" id="navLinks">
+<div class="container navbar">
 
-      <a href="#home" data-i18n="home">Home</a>
-      <a href="#about" data-i18n="about">About</a>
-      <a href="#skills" data-i18n="skills">Skills</a>
-      <a href="#projects" data-i18n="projects">Projects</a>
-      <a href="#blog" data-i18n="blog">Blog</a>
-      <a href="#gallery" data-i18n="gallery">Gallery</a>
-      <a href="#contact" data-i18n="contact">Contact</a>
-      <a href="#admin" data-i18n="admin">Admin</a>
+<a
+  href="#home"
+  class="logo"
+>
+YKD.
+</a>
 
-    </div>
 
-    <div class="actions">
+<nav
+  id="navLinks"
+  class="nav-links"
+>
 
-      <select id="lang" class="iconbtn lang">
-        <option value="en">EN</option>
-        <option value="om">OM</option>
-        <option value="am">አማ</option>
-        <option value="ar">ع</option>
-      </select>
+<a href="#home">Home</a>
+<a href="#about">About</a>
+<a href="#skills">Skills</a>
+<a href="#projects">Projects</a>
+<a href="#blog">Blog</a>
+<a href="#gallery">Gallery</a>
+<a href="#github">GitHub</a>
+<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
 
-      <button class="iconbtn" id="themeBtn">
-        🌙
-      </button>
-
-      <button class="iconbtn hamb" id="menuBtn">
-        ☰
-      </button>
-
-    </div>
-
-  </div>
 </nav>
 
 
-<!-- ================= MAIN ================= -->
+<div class="nav-actions">
 
-<main>
+<select id="lang">
 
-<!-- HOME -->
+<option value="en">
+English
+</option>
 
-<section id="home" class="hero">
+<option value="om">
+Afaan Oromoo
+</option>
 
-  <div class="container hero-grid">
+<option value="am">
+አማርኛ
+</option>
 
-    <div>
-
-      <div class="eyebrow" data-i18n="welcome">
-        WELCOME TO MY PORTFOLIO
-      </div>
-
-      <h1>
-        Yusuf Kedir
-        <span class="gradient">App</span>
-      </h1>
-
-      <p class="lead" data-i18n="heroText">
-        A modern portfolio for my skills, projects,
-        writing and creative work.
-      </p>
-
-      <div class="hero-btns">
-
-        <a class="btn" href="#projects" data-i18n="viewProjects">
-          View Projects
-        </a>
-
-        <a class="btn alt" href="#contact" data-i18n="contactMe">
-          Contact Me
-        </a>
-
-      </div>
-
-    </div>
+</select>
 
 
-    <div class="hero-card">
+<button
+  id="themeBtn"
+  class="icon-btn"
+  aria-label="Theme"
+>
+🌙
+</button>
 
-      <div class="avatar">
-        YK
-      </div>
 
-      <h3 style="text-align:center;margin-bottom:4px">
-        Yusuf Kedir
-      </h3>
+<button
+  id="menuBtn"
+  class="icon-btn menu-btn"
+>
+☰
+</button>
 
-      <p
-        class="muted"
-        style="text-align:center;margin-top:0"
-      >
-        Web Developer • Programmer • PWA
-      </p>
+</div>
 
-      <div
-        class="tags"
-        style="justify-content:center"
-      >
+</div>
 
-        <span class="tag">HTML</span>
-        <span class="tag">CSS</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">Python</span>
-        <span class="tag">Supabase</span>
+</header>
 
-      </div>
 
-    </div>
 
-  </div>
+<!-- HERO -->
+
+<section
+  id="home"
+  class="hero"
+>
+
+<div class="container hero-grid">
+
+
+<div>
+
+<p>
+👋 Welcome to my portfolio
+</p>
+
+<h1>
+
+I'm
+
+<span class="gradient-text">
+Yusuf Kedir
+</span>
+
+</h1>
+
+<p>
+
+Web Developer, Programmer and Technology
+Enthusiast. I build modern websites,
+web applications and digital experiences.
+
+</p>
+
+
+<div class="hero-buttons">
+
+<a
+  href="#projects"
+  class="btn btn-primary"
+>
+View My Projects
+</a>
+
+<a
+  href="#contact"
+  class="btn btn-secondary"
+>
+Contact Me
+</a>
+
+</div>
+
+</div>
+
+
+<div class="hero-card">
+
+<div class="profile-card">
+
+<div class="profile-card-inner">
+
+<img
+  id="heroPhoto"
+  src="./icons/icon-512.png"
+  alt="Yusuf Kedir"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
 
 </section>
+
 
 
 <!-- ABOUT -->
 
 <section id="about">
 
-  <div class="container">
+<div class="container">
 
-    <div class="section-head">
+<div class="section-title">
 
-      <div>
+<h2>
+About Me
+</h2>
 
-        <h2 data-i18n="aboutTitle">
-          About Me
-        </h2>
+<p>
+A little about my journey and interests
+</p>
 
-        <p class="muted" data-i18n="aboutText">
-          I build responsive websites, PWAs and digital
-          projects with a focus on useful design and
-          clean experiences.
-        </p>
-
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="grid">
-
-      <div class="card">
-
-        <h3>
-          🚀
-          <span data-i18n="mission">
-            Mission
-          </span>
-        </h3>
-
-        <p class="muted" data-i18n="missionText">
-          Create practical, beautiful and accessible
-          digital experiences.
-        </p>
-
-      </div>
+<div class="about-grid">
 
 
-      <div class="card">
+<div class="card">
 
-        <h3>
-          💡
-          <span data-i18n="focus">
-            Focus
-          </span>
-        </h3>
+<div class="card-icon">
+💻
+</div>
 
-        <p class="muted">
-          Web • Mobile • PWA • Database • UI/UX
-        </p>
+<h3>
+Web Development
+</h3>
 
-      </div>
+<p>
+I create responsive and modern websites
+using HTML, CSS, JavaScript and modern
+web technologies.
+</p>
+
+</div>
 
 
-      <div class="card">
+<div class="card">
 
-        <h3>
-          🌍
-          <span data-i18n="languages">
-            Languages
-          </span>
-        </h3>
+<div class="card-icon">
+🚀
+</div>
 
-        <p class="muted">
-          Afaan Oromoo • Amharic • English • العربية
-        </p>
+<h3>
+Programming
+</h3>
 
-      </div>
+<p>
+I enjoy learning programming and building
+useful applications with different
+programming languages.
+</p>
 
-    </div>
+</div>
 
-  </div>
+
+<div class="card">
+
+<div class="card-icon">
+📱
+</div>
+
+<h3>
+Progressive Web Apps
+</h3>
+
+<p>
+I build installable and mobile-friendly
+PWA applications that work across devices.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
 
 </section>
+
 
 
 <!-- SKILLS -->
 
 <section id="skills">
 
-  <div class="container">
+<div class="container">
 
-    <h2 data-i18n="skillsTitle">
-      Skills
-    </h2>
+<div class="section-title">
 
-    <p class="muted">
-      HTML • CSS • JavaScript • Python • C++ • Java •
-      Android • PWA • Supabase • Database • GitHub
-    </p>
+<h2>
+My Skills
+</h2>
 
-    <div
-      class="skills"
-      id="skillsList"
-    ></div>
+<p>
+Technologies I work and learn with
+</p>
 
-  </div>
+</div>
+
+
+<div
+  id="skillsList"
+  class="skills"
+>
+</div>
+
+</div>
 
 </section>
+
 
 
 <!-- PROJECTS -->
 
 <section id="projects">
 
-  <div class="container">
+<div class="container">
 
-    <div class="section-head">
+<div class="section-title">
 
-      <div>
+<h2>
+My Projects
+</h2>
 
-        <h2 data-i18n="projectsTitle">
-          Projects
-        </h2>
+<p>
+Some of my latest work
+</p>
 
-        <p class="muted" data-i18n="projectsText">
-          Selected work from my portfolio.
-        </p>
+</div>
 
-      </div>
 
-      <div class="searchbar">
+<div
+  id="projectsGrid"
+  class="grid"
+>
+</div>
 
-        <input
-          id="projectSearch"
-          class="field"
-          placeholder="Search projects..."
-        >
-
-      </div>
-
-    </div>
-
-    <div
-      id="projectsGrid"
-      class="grid"
-    ></div>
-
-  </div>
+</div>
 
 </section>
+
 
 
 <!-- BLOG -->
 
 <section id="blog">
 
-  <div class="container">
+<div class="container">
 
-    <div class="section-head">
+<div class="section-title">
 
-      <div>
+<h2>
+Blog
+</h2>
 
-        <h2 data-i18n="blogTitle">
-          Blog & Writing
-        </h2>
+<p>
+Articles and technology ideas
+</p>
 
-        <p class="muted" data-i18n="blogText">
-          Articles, notes and ideas.
-        </p>
+</div>
 
-      </div>
 
-      <div class="searchbar">
+<div
+  id="postsGrid"
+  class="grid"
+>
+</div>
 
-        <input
-          id="postSearch"
-          class="field"
-          placeholder="Search posts..."
-        >
-
-        <select
-          id="postCategory"
-          class="field"
-        >
-          <option value="">
-            All categories
-          </option>
-        </select>
-
-      </div>
-
-    </div>
-
-    <div
-      id="postsGrid"
-      class="grid"
-    ></div>
-
-  </div>
+</div>
 
 </section>
+
 
 
 <!-- GALLERY -->
 
 <section id="gallery">
 
-  <div class="container">
+<div class="container">
 
-    <div class="section-head">
+<div class="section-title">
 
-      <div>
+<h2>
+Gallery
+</h2>
 
-        <h2 data-i18n="galleryTitle">
-          Gallery
-        </h2>
+<p>
+My personal photo gallery
+</p>
 
-        <p class="muted" data-i18n="galleryText">
-          A collection of images and memories.
-        </p>
+</div>
 
-      </div>
 
-      <input
-        id="gallerySearch"
-        class="field"
-        placeholder="Search gallery..."
-      >
+<div
+  id="galleryGrid"
+  class="gallery"
+>
+</div>
 
-    </div>
-
-    <div
-      id="galleryGrid"
-      class="gallery"
-    ></div>
-
-  </div>
+</div>
 
 </section>
+
 
 
 <!-- GITHUB -->
 
 <section id="github">
 
-  <div class="container card">
+<div class="container">
 
-    <h2>
-      GitHub
-    </h2>
+<div class="section-title">
 
-    <p class="muted">
-      Your GitHub profile and public repositories.
-    </p>
+<h2>
+GitHub
+</h2>
 
-    <div id="githubBox">
+<p>
+Explore my open-source projects
+</p>
 
-      <p class="muted">
-        Set GitHub username from Admin.
-      </p>
+</div>
 
-    </div>
 
-  </div>
+<div class="card github-box">
+
+<div class="github-form">
+
+<input
+  id="githubUsername"
+  type="text"
+  placeholder="GitHub username"
+>
+
+<button
+  id="githubBtn"
+  class="btn btn-primary"
+>
+Load
+</button>
+
+</div>
+
+
+<div
+  id="githubRepos"
+  class="github-repos"
+>
+</div>
+
+</div>
+
+</div>
 
 </section>
+
 
 
 <!-- CONTACT -->
 
 <section id="contact">
 
-  <div class="container">
+<div class="container">
 
-    <div class="section-head">
+<div class="section-title">
 
-      <div>
+<h2>
+Contact Me
+</h2>
 
-        <h2 data-i18n="contactTitle">
-          Contact Me
-        </h2>
+<p>
+Let's build something great together
+</p>
 
-        <p class="muted" data-i18n="contactText">
-          Send a message and I will receive it in
-          my Supabase database.
-        </p>
-
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="grid2">
-
-      <div class="card">
-
-        <p>
-          📧
-          <b>Email:</b>
-          ykedir106@gmail.com
-        </p>
-
-        <p>
-          📞
-          <b>Phone:</b>
-          +251925702779
-        </p>
-
-        <p>
-          📍
-          <b>Location:</b>
-          Chiro City, Ethiopia
-        </p>
-
-      </div>
+<div class="contact-grid">
 
 
-      <div class="card">
-
-        <form id="contactForm">
-
-          <div class="row">
-
-            <div>
-
-              <label>
-                Name
-              </label>
-
-              <input
-                required
-                id="cName"
-                class="field"
-              >
-
-            </div>
+<div class="contact-info">
 
 
-            <div>
+<div class="contact-item">
 
-              <label>
-                Email
-              </label>
+<strong>
+📧 Email
+</strong>
 
-              <input
-                required
-                type="email"
-                id="cEmail"
-                class="field"
-              >
+<p>
+ykedir106@gmail.com
+</p>
 
-            </div>
-
-          </div>
+</div>
 
 
-          <div>
+<div class="contact-item">
 
-            <label>
-              Subject
-            </label>
+<strong>
+💬 WhatsApp
+</strong>
 
-            <input
-              id="cSubject"
-              class="field"
-            >
+<p>
+Available for communication
+</p>
 
-          </div>
-
-
-          <div>
-
-            <label>
-              Message
-            </label>
-
-            <textarea
-              required
-              id="cMessage"
-              rows="6"
-              class="field"
-            ></textarea>
-
-          </div>
+</div>
 
 
-          <button
-            class="btn"
-            data-i18n="sendMessage"
-          >
-            Send Message
-          </button>
+<div class="contact-item">
 
-        </form>
+<strong>
+🌍 Location
+</strong>
 
-      </div>
+<p>
+Ethiopia
+</p>
 
-    </div>
+</div>
 
-  </div>
+
+</div>
+
+
+<div class="card">
+
+<form
+  id="contactForm"
+  class="form"
+>
+
+<input
+  id="contactName"
+  type="text"
+  placeholder="Your name"
+  required
+>
+
+<input
+  id="contactEmail"
+  type="email"
+  placeholder="Your email"
+>
+
+<textarea
+  id="contactMessage"
+  placeholder="Your message"
+  required
+></textarea>
+
+
+<button
+  class="btn btn-primary"
+  type="submit"
+>
+Send Message
+</button>
+
+</form>
+
+</div>
+
+
+</div>
+
+</div>
 
 </section>
 
 
-<!-- ================= ADMIN ================= -->
 
-<section id="admin" class="admin">
+<!-- ADMIN -->
 
-  <div class="container">
+<section
+  id="admin"
+  class="admin-section"
+>
 
-    <div class="section-head">
+<div class="container">
 
-      <div>
 
-        <h2 data-i18n="adminTitle">
-          Admin Dashboard
-        </h2>
+<!-- LOGIN -->
 
-        <p class="muted" data-i18n="adminText">
-          Private content management area.
-        </p>
+<div
+  id="loginBox"
+  class="admin-login card"
+>
 
-      </div>
+<div class="admin-title">
 
-    </div>
+<h2>
+🔐 Admin Login
+</h2>
 
+<p>
+Only authorized administrators can access
+the dashboard.
+</p>
 
-    <!-- LOGIN -->
+</div>
 
-    <div
-      id="loginBox"
-      class="card"
-    >
 
-      <form id="loginForm">
+<form
+  id="loginForm"
+  class="form"
+>
 
-        <div class="row">
+<input
+  id="loginEmail"
+  type="email"
+  placeholder="Admin email"
+  autocomplete="email"
+  required
+>
 
-          <div>
+<input
+  id="loginPassword"
+  type="password"
+  placeholder="Password"
+  autocomplete="current-password"
+  required
+>
 
-            <label>
-              Email
-            </label>
+<button
+  type="submit"
+  class="btn btn-primary"
+>
+Login
+</button>
 
-            <input
-              id="loginEmail"
-              type="email"
-              required
-              class="field"
-              value="ykedir106@gmail.com"
-            >
+</form>
 
-          </div>
+</div>
 
 
-          <div>
 
-            <label>
-              Password
-            </label>
+<!-- DASHBOARD -->
 
-            <input
-              id="loginPassword"
-              type="password"
-              required
-              class="field"
-            >
+<div
+  id="dashboard"
+  class="dashboard hidden"
+>
 
-          </div>
 
-        </div>
+<div>
 
+<h2>
+⚡ Admin Dashboard
+</h2>
 
-        <button class="btn">
-          🔐 Login
-        </button>
+<p>
+Manage your portfolio from one place.
+</p>
 
-      </form>
+</div>
 
-    </div>
 
+<!-- STATS -->
 
-    <!-- DASHBOARD -->
+<div class="admin-stats">
 
-    <div
-      id="dashboard"
-      class="hidden"
-    >
 
-      <!-- STATS -->
+<div class="stat">
 
-      <div class="admin-grid">
+<strong id="statProjects">
+0
+</strong>
 
-        <div class="stat">
-          <span>
-            Projects
-          </span>
-          <b id="statProjects">
-            0
-          </b>
-        </div>
+Projects
 
-        <div class="stat">
-          <span>
-            Posts
-          </span>
-          <b id="statPosts">
-            0
-          </b>
-        </div>
-
-        <div class="stat">
-          <span>
-            Images
-          </span>
-          <b id="statGallery">
-            0
-          </b>
-        </div>
-
-        <div class="stat">
-          <span>
-            Messages
-          </span>
-          <b id="statMessages">
-            0
-          </b>
-        </div>
-
-      </div>
-
-
-      <!-- TABS -->
-
-      <div class="admin-tabs">
-
-        <button
-          class="tab active"
-          data-tab="projectPanel"
-        >
-          Projects
-        </button>
-
-        <button
-          class="tab"
-          data-tab="postPanel"
-        >
-          Blog
-        </button>
-
-        <button
-          class="tab"
-          data-tab="galleryPanel"
-        >
-          Gallery
-        </button>
-
-        <button
-          class="tab"
-          data-tab="githubPanel"
-        >
-          GitHub
-        </button>
-
-        <button
-          class="tab"
-          data-tab="messagesPanel"
-        >
-          Messages
-        </button>
-
-        <button
-          class="tab"
-          id="logoutBtn"
-        >
-          Logout
-        </button>
-
-      </div>
-
-
-      <!-- PROJECT MANAGER -->
-
-      <div
-        id="projectPanel"
-        class="admin-panel active card"
-      >
-
-        <h3>
-          Project Manager
-        </h3>
-
-        <form id="projectForm">
-
-          <input
-            type="hidden"
-            id="projectId"
-          >
-
-          <div class="row">
-
-            <input
-              id="projectTitle"
-              class="field"
-              placeholder="Project title"
-              required
-            >
-
-            <input
-              id="projectTech"
-              class="field"
-              placeholder="Technology"
-            >
-
-          </div>
-
-
-          <textarea
-            id="projectDescription"
-            class="field"
-            rows="4"
-            placeholder="Description"
-          ></textarea>
-
-
-          <div class="row">
-
-            <input
-              id="projectImage"
-              class="field"
-              placeholder="Image URL"
-            >
-
-            <input
-              id="projectUrl"
-              class="field"
-              placeholder="Live URL"
-            >
-
-          </div>
+</div>
 
 
-          <button class="btn">
-            Save Project
-          </button>
+<div class="stat">
 
-          <button
-            type="button"
-            class="btn alt"
-            id="projectReset"
-          >
-            Clear
-          </button>
+<strong id="statPosts">
+0
+</strong>
 
-        </form>
+Blog Posts
 
-        <div id="adminProjects"></div>
+</div>
 
-      </div>
 
+<div class="stat">
 
-      <!-- BLOG MANAGER -->
+<strong id="statGallery">
+0
+</strong>
 
-      <div
-        id="postPanel"
-        class="admin-panel card"
-      >
+Gallery
 
-        <h3>
-          Blog Manager
-        </h3>
-
-        <form id="postForm">
-
-          <input
-            type="hidden"
-            id="postId"
-          >
-
-          <div class="row">
-
-            <input
-              id="postTitle"
-              class="field"
-              placeholder="Post title"
-              required
-            >
+</div>
 
-            <input
-              id="postCategoryInput"
-              class="field"
-              placeholder="Category"
-            >
 
-          </div>
+<div class="stat">
 
+<strong id="statMessages">
+0
+</strong>
 
-          <textarea
-            id="postExcerpt"
-            class="field"
-            rows="2"
-            placeholder="Short excerpt"
-          ></textarea>
+Messages
 
+</div>
 
-          <textarea
-            id="postContent"
-            class="field"
-            rows="8"
-            placeholder="Full content"
-            required
-          ></textarea>
 
+</div>
 
-          <input
-            id="postImage"
-            class="field"
-            placeholder="Image URL"
-          >
 
 
-          <button class="btn">
-            Save Post
-          </button>
+<!-- TABS -->
 
-          <button
-            type="button"
-            class="btn alt"
-            id="postReset"
-          >
-            Clear
-          </button>
+<div class="admin-tabs">
 
-        </form>
+<button
+  class="admin-tab active"
+  data-tab="projectsAdmin"
+>
+Projects
+</button>
 
-        <div id="adminPosts"></div>
+<button
+  class="admin-tab"
+  data-tab="postsAdmin"
+>
+Blog
+</button>
 
-      </div>
+<button
+  class="admin-tab"
+  data-tab="galleryAdmin"
+>
+Gallery
+</button>
 
+<button
+  class="admin-tab"
+  data-tab="messagesAdmin"
+>
+Messages
+</button>
 
-      <!-- GALLERY -->
+<button
+  id="logoutBtn"
+  class="admin-tab"
+>
+Logout
+</button>
 
-      <div
-        id="galleryPanel"
-        class="admin-panel card"
-      >
+</div>
 
-        <h3>
-          Gallery Manager
-        </h3>
 
-        <p class="muted small">
-          Upload multiple images to Supabase Storage.
-        </p>
 
-        <form id="uploadForm">
+<!-- PROJECT ADMIN -->
 
-          <input
-            id="imageFiles"
-            type="file"
-            accept="image/*"
-            multiple
-            required
-            class="field"
-          >
+<div
+  id="projectsAdmin"
+  class="admin-panel active card"
+>
 
-          <input
-            id="galleryCaption"
-            class="field"
-            placeholder="Caption"
-          >
+<h3>
+Add Project
+</h3>
 
-          <input
-            id="galleryCategory"
-            class="field"
-            placeholder="Category"
-          >
+<br>
 
-          <button class="btn">
-            Upload Images
-          </button>
+<form
+  id="projectForm"
+  class="form"
+>
 
-        </form>
+<input
+  id="projectId"
+  type="hidden"
+>
 
-        <div id="adminGallery"></div>
+<input
+  id="projectTitle"
+  placeholder="Project title"
+  required
+>
 
-      </div>
+<textarea
+  id="projectDescription"
+  placeholder="Project description"
+></textarea>
 
+<input
+  id="projectImage"
+  placeholder="Image URL"
+>
 
-      <!-- GITHUB -->
+<input
+  id="projectLink"
+  placeholder="Project URL"
+>
 
-      <div
-        id="githubPanel"
-        class="admin-panel card"
-      >
+<input
+  id="projectCategory"
+  placeholder="Category"
+>
 
-        <h3>
-          GitHub Settings
-        </h3>
+<div>
 
-        <form id="githubForm">
+<button
+  class="btn btn-primary"
+  type="submit"
+>
+Save Project
+</button>
 
-          <input
-            id="githubUsername"
-            class="field"
-            placeholder="GitHub username"
-          >
+<button
+  type="button"
+  id="projectCancel"
+  class="btn btn-secondary"
+>
+Cancel
+</button>
 
-          <button class="btn">
-            Save GitHub Username
-          </button>
+</div>
 
-        </form>
+</form>
 
-        <p class="muted small">
-          Your GitHub username is stored locally
-          in this browser.
-        </p>
 
-      </div>
+<div
+  id="adminProjectsList"
+  class="admin-list"
+>
+</div>
 
+</div>
 
-      <!-- MESSAGES -->
 
-      <div
-        id="messagesPanel"
-        class="admin-panel card"
-      >
 
-        <h3>
-          Contact Messages
-        </h3>
+<!-- BLOG ADMIN -->
 
-        <div id="adminMessages"></div>
+<div
+  id="postsAdmin"
+  class="admin-panel card"
+>
 
-      </div>
+<h3>
+Add Blog Post
+</h3>
 
-    </div>
+<br>
 
-  </div>
+<form
+  id="postForm"
+  class="form"
+>
+
+<input
+  id="postId"
+  type="hidden"
+>
+
+<input
+  id="postTitle"
+  placeholder="Post title"
+  required
+>
+
+<input
+  id="postCategory"
+  placeholder="Category"
+>
+
+<input
+  id="postImage"
+  placeholder="Image URL"
+>
+
+<textarea
+  id="postExcerpt"
+  placeholder="Short excerpt"
+></textarea>
+
+<textarea
+  id="postContent"
+  placeholder="Full content"
+></textarea>
+
+<div>
+
+<button
+  class="btn btn-primary"
+  type="submit"
+>
+Save Post
+</button>
+
+<button
+  type="button"
+  id="postCancel"
+  class="btn btn-secondary"
+>
+Cancel
+</button>
+
+</div>
+
+</form>
+
+
+<div
+  id="adminPostsList"
+  class="admin-list"
+>
+</div>
+
+</div>
+
+
+
+<!-- GALLERY ADMIN -->
+
+<div
+  id="galleryAdmin"
+  class="admin-panel card"
+>
+
+<h3>
+Upload Gallery Images
+</h3>
+
+<br>
+
+<form
+  id="galleryForm"
+  class="form"
+>
+
+<input
+  id="galleryTitle"
+  placeholder="Gallery title"
+>
+
+<input
+  id="galleryFiles"
+  type="file"
+  accept="image/*"
+  multiple
+  required
+>
+
+<button
+  class="btn btn-primary"
+  type="submit"
+>
+Upload Images
+</button>
+
+</form>
+
+
+<div
+  id="adminGalleryList"
+  class="admin-list"
+>
+</div>
+
+</div>
+
+
+
+<!-- MESSAGES ADMIN -->
+
+<div
+  id="messagesAdmin"
+  class="admin-panel card"
+>
+
+<h3>
+📨 Contact Messages
+</h3>
+
+<div
+  id="adminMessagesList"
+  class="admin-list"
+>
+</div>
+
+</div>
+
+
+</div>
+
+</div>
 
 </section>
 
-</main>
 
 
 <!-- FOOTER -->
 
 <footer>
 
-  <div class="container">
+<div class="container">
 
-    ©
-    <span id="year"></span>
-    Yusuf Kedir App
+<p>
+© <span id="year"></span>
+Yusuf Kedir. All rights reserved.
+</p>
 
-    <br>
+<p>
+Developed by Yusuf Kedir
+</p>
 
-    Developed by fileber abdulhamid 0915044161
-
-  </div>
+</div>
 
 </footer>
+
+
+
+<!-- IMAGE MODAL -->
+
+<div
+  id="imageModal"
+  class="modal"
+>
+
+<div class="modal-box">
+
+<button
+  id="imageModalClose"
+  class="modal-close"
+>
+×
+</button>
+
+<img
+  id="modalImage"
+  style="
+    width:100%;
+    border-radius:12px;
+  "
+  alt="Gallery image"
+>
+
+</div>
+
+</div>
+
 
 
 <!-- TOAST -->
@@ -1678,72 +1965,17 @@
 <div
   id="toast"
   class="toast"
-></div>
-
-
-<!-- IMAGE MODAL -->
-
-<div
-  id="imageModal"
-  class="modal lightbox"
-  onclick="closeImage()"
 >
-
-  <img
-    id="modalImg"
-    alt=""
-  >
-
 </div>
 
 
-<!-- POST MODAL -->
-
-<div
-  id="postModal"
-  class="modal"
->
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2 id="modalPostTitle"></h2>
-
-      <button
-        class="close"
-        onclick="closePost()"
-      >
-        ×
-      </button>
-
-    </div>
-
-    <p
-      class="muted"
-      id="modalPostMeta"
-    ></p>
-
-    <img
-      id="modalPostImg"
-      class="post-img hidden"
-      alt=""
-    >
-
-    <div id="modalPostContent"></div>
-
-  </div>
-
-</div>
-
-
-<!-- ================= JAVASCRIPT ================= -->
 
 <script>
 
-/* =====================================================
-   SUPABASE CONFIGURATION
-===================================================== */
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
   "https://zatnpzfefnyswcvwnksk.supabase.co";
@@ -1758,15 +1990,9 @@ const db =
   );
 
 
-/* =====================================================
-   GLOBAL VARIABLES
-===================================================== */
-
-const $ = selector =>
-  document.querySelector(selector);
-
-const $$ = selector =>
-  [...document.querySelectorAll(selector)];
+/* =========================================
+   GLOBAL DATA
+========================================= */
 
 let projects = [];
 let posts = [];
@@ -1776,11 +2002,148 @@ let messages = [];
 let isAdmin = false;
 
 
-/* =====================================================
-   TRANSLATIONS
-===================================================== */
+/* =========================================
+   HELPERS
+========================================= */
 
-const T = {
+const $ = selector =>
+  document.querySelector(selector);
+
+
+function toast(message){
+
+  const el = $("#toast");
+
+  el.textContent = message;
+
+  el.classList.add("show");
+
+  setTimeout(() => {
+
+    el.classList.remove("show");
+
+  },3000);
+
+}
+
+
+function escapeHTML(value){
+
+  if(value === null || value === undefined){
+    return "";
+  }
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================
+   SKILLS
+========================================= */
+
+const skills = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "Python",
+  "C++",
+  "Java",
+  "PWA",
+  "Supabase",
+  "Database",
+  "GitHub",
+  "Vercel",
+  "Responsive Design"
+];
+
+
+function renderSkills(){
+
+  $("#skillsList").innerHTML =
+    skills.map(skill => `
+      <span class="skill">
+        ${escapeHTML(skill)}
+      </span>
+    `).join("");
+
+}
+
+
+/* =========================================
+   THEME
+========================================= */
+
+function applyTheme(){
+
+  const dark =
+    localStorage.getItem("theme") === "dark";
+
+  document.body.classList.toggle(
+    "dark",
+    dark
+  );
+
+  $("#themeBtn").textContent =
+    dark ? "☀️" : "🌙";
+
+}
+
+
+$("#themeBtn").onclick = () => {
+
+  const dark =
+    document.body.classList.toggle("dark");
+
+  localStorage.setItem(
+    "theme",
+    dark ? "dark" : "light"
+  );
+
+  $("#themeBtn").textContent =
+    dark ? "☀️" : "🌙";
+
+};
+
+
+/* =========================================
+   MOBILE MENU
+========================================= */
+
+$("#menuBtn").onclick = () => {
+
+  $("#navLinks")
+    .classList
+    .toggle("show");
+
+};
+
+
+document
+  .querySelectorAll("#navLinks a")
+  .forEach(link => {
+
+    link.onclick = () => {
+
+      $("#navLinks")
+        .classList
+        .remove("show");
+
+    };
+
+  });
+
+
+/* =========================================
+   LANGUAGE
+========================================= */
+
+const translations = {
 
   en:{
     home:"Home",
@@ -1789,818 +2152,158 @@ const T = {
     projects:"Projects",
     blog:"Blog",
     gallery:"Gallery",
+    github:"GitHub",
     contact:"Contact",
-    admin:"Admin",
-
-    welcome:"WELCOME TO MY PORTFOLIO",
-
-    heroText:
-      "A modern portfolio for my skills, projects, writing and creative work.",
-
-    viewProjects:"View Projects",
-    contactMe:"Contact Me",
-
-    aboutTitle:"About Me",
-
-    aboutText:
-      "I build responsive websites, PWAs and digital projects with a focus on useful design and clean experiences.",
-
-    mission:"Mission",
-
-    missionText:
-      "Create practical, beautiful and accessible digital experiences.",
-
-    focus:"Focus",
-    languages:"Languages",
-
-    skillsTitle:"Skills",
-
-    projectsTitle:"Projects",
-
-    projectsText:
-      "Selected work from my portfolio.",
-
-    blogTitle:"Blog & Writing",
-
-    blogText:
-      "Articles, notes and ideas.",
-
-    galleryTitle:"Gallery",
-
-    galleryText:
-      "A collection of images and memories.",
-
-    contactTitle:"Contact Me",
-
-    contactText:
-      "Send a message and I will receive it in my Supabase database.",
-
-    sendMessage:"Send Message",
-
-    adminTitle:"Admin Dashboard",
-
-    adminText:
-      "Private content management area."
+    admin:"Admin"
   },
-
 
   om:{
-
     home:"Mana",
-    about:"Waa'ee Koo",
+    about:"Waa'ee Keenya",
     skills:"Dandeettii",
     projects:"Pirojektoota",
-    blog:"Barreeffama",
-    gallery:"Kuusaa Suuraa",
-    contact:"Quunnamtii",
-    admin:"Bulchiinsa",
-
-    welcome:
-      "GARA PORTFOLIO KOO DHUFE",
-
-    heroText:
-      "Portfolio ammayyaa dandeettii, pirojektoota, barreeffamootaa fi hojii kalaqaa koo agarsiisu.",
-
-    viewProjects:
-      "Pirojektoota Ilaali",
-
-    contactMe:
-      "Na Quunnami",
-
-    aboutTitle:
-      "Waa'ee Koo",
-
-    aboutText:
-      "Weebsaayitii, PWA fi pirojektoota dijitaalaa responsive fi qulqulluu nan ijaara.",
-
-    mission:
-      "Kaayyoo",
-
-    missionText:
-      "Muuxannoo dijitaalaa faayidaa qabu, bareedaa fi nama hundaaf mijataa uumuudha.",
-
-    focus:
-      "Xiyyeeffannoo",
-
-    languages:
-      "Afaanota",
-
-    skillsTitle:
-      "Dandeettii",
-
-    projectsTitle:
-      "Pirojektoota",
-
-    projectsText:
-      "Hojiiwwan portfolio koo keessaa muraasa.",
-
-    blogTitle:
-      "Barreeffamaa fi Yaada",
-
-    blogText:
-      "Barreeffamoota, yaadannoo fi yaada.",
-
-    galleryTitle:
-      "Kuusaa Suuraa",
-
-    galleryText:
-      "Walitti qabama suuraalee fi yaadannoo.",
-
-    contactTitle:
-      "Na Quunnami",
-
-    contactText:
-      "Ergaa naaf ergi; Supabase keessatti nan argadha.",
-
-    sendMessage:
-      "Ergaa Ergi",
-
-    adminTitle:
-      "Bulchiinsa",
-
-    adminText:
-      "Kutaa dhuunfaa qabiyyee bulchuuf."
+    blog:"Barruulee",
+    gallery:"Suuraa",
+    github:"GitHub",
+    contact:"Nu Qunnami",
+    admin:"Bulchiinsa"
   },
-
 
   am:{
-
     home:"መነሻ",
     about:"ስለ እኔ",
-    skills:"ክህሎቶች",
+    skills:"ችሎታዎች",
     projects:"ፕሮጀክቶች",
     blog:"ብሎግ",
-    gallery:"ማዕከለ ስዕል",
-    contact:"ያግኙን",
-    admin:"አስተዳደር",
-
-    welcome:
-      "ወደ ፖርትፎሊዮዬ እንኳን በደህና መጡ",
-
-    heroText:
-      "የእኔን ክህሎቶች፣ ፕሮጀክቶች እና ጽሁፎች የሚያሳይ ዘመናዊ ፖርትፎሊዮ።",
-
-    viewProjects:
-      "ፕሮጀክቶችን ይመልከቱ",
-
-    contactMe:
-      "ያግኙኝ",
-
-    aboutTitle:
-      "ስለ እኔ",
-
-    aboutText:
-      "ምላሽ ሰጪ ድህረ ገጾችን፣ PWA እና ዲጂታል ፕሮጀክቶችን እገነባለሁ።",
-
-    mission:
-      "ተልዕኮ",
-
-    missionText:
-      "ጠቃሚ፣ ውብ እና ለሁሉም ተደራሽ የሆነ ዲጂታል ልምድ መፍጠር።",
-
-    focus:
-      "ትኩረት",
-
-    languages:
-      "ቋንቋዎች",
-
-    skillsTitle:
-      "ክህሎቶች",
-
-    projectsTitle:
-      "ፕሮጀክቶች",
-
-    projectsText:
-      "ከፖርትፎሊዮዬ የተመረጡ ስራዎች።",
-
-    blogTitle:
-      "ብሎግ እና ጽሁፎች",
-
-    blogText:
-      "ጽሁፎች፣ ማስታወሻዎች እና ሀሳቦች።",
-
-    galleryTitle:
-      "ማዕከለ ስዕል",
-
-    galleryText:
-      "የምስሎች እና ትውስታዎች ስብስብ።",
-
-    contactTitle:
-      "ያግኙኝ",
-
-    contactText:
-      "መልዕክት ይላኩ፤ በSupabase ውስጥ እቀበለዋለሁ።",
-
-    sendMessage:
-      "መልዕክት ላክ",
-
-    adminTitle:
-      "አስተዳደር",
-
-    adminText:
-      "የግል የይዘት አስተዳደር ክፍል።"
-  },
-
-
-  ar:{
-
-    home:"الرئيسية",
-    about:"نبذة",
-    skills:"المهارات",
-    projects:"المشاريع",
-    blog:"المدونة",
-    gallery:"المعرض",
-    contact:"اتصل بي",
-    admin:"الإدارة",
-
-    welcome:
-      "مرحباً بكم في ملفي الشخصي",
-
-    heroText:
-      "ملف شخصي حديث لعرض مهاراتي ومشاريعي وكتاباتي وأعمالي الإبداعية.",
-
-    viewProjects:
-      "عرض المشاريع",
-
-    contactMe:
-      "تواصل معي",
-
-    aboutTitle:
-      "نبذة عني",
-
-    aboutText:
-      "أبني مواقع ويب وتطبيقات PWA ومشاريع رقمية متجاوبة.",
-
-    mission:
-      "الهدف",
-
-    missionText:
-      "إنشاء تجارب رقمية عملية وجميلة ومتاحة للجميع.",
-
-    focus:
-      "التركيز",
-
-    languages:
-      "اللغات",
-
-    skillsTitle:
-      "المهارات",
-
-    projectsTitle:
-      "المشاريع",
-
-    projectsText:
-      "نماذج مختارة من أعمالي.",
-
-    blogTitle:
-      "المدونة والكتابات",
-
-    blogText:
-      "مقالات وملاحظات وأفكار.",
-
-    galleryTitle:
-      "المعرض",
-
-    galleryText:
-      "مجموعة من الصور والذكريات.",
-
-    contactTitle:
-      "تواصل معي",
-
-    contactText:
-      "أرسل رسالة وستصلني عبر قاعدة بيانات Supabase.",
-
-    sendMessage:
-      "إرسال الرسالة",
-
-    adminTitle:
-      "لوحة الإدارة",
-
-    adminText:
-      "منطقة خاصة لإدارة المحتوى."
+    gallery:"ፎቶዎች",
+    github:"GitHub",
+    contact:"ያግኙኝ",
+    admin:"አስተዳደር"
   }
 
 };
 
 
-/* =====================================================
-   HELPER FUNCTIONS
-===================================================== */
+function applyLang(lang){
 
-function toast(message){
+  const t =
+    translations[lang] ||
+    translations.en;
 
-  const t = $("#toast");
-
-  t.textContent = message;
-
-  t.classList.add("show");
-
-  setTimeout(
-    () => t.classList.remove("show"),
-    3200
-  );
-}
-
-
-function esc(value){
-
-  return String(value ?? "")
-    .replace(
-      /[&<>"']/g,
-      char => ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-      }[char])
+  const links =
+    document.querySelectorAll(
+      "#navLinks a"
     );
-}
 
+  if(links.length >= 9){
 
-/* =====================================================
-   LANGUAGE
-===================================================== */
+    links[0].textContent = t.home;
+    links[1].textContent = t.about;
+    links[2].textContent = t.skills;
+    links[3].textContent = t.projects;
+    links[4].textContent = t.blog;
+    links[5].textContent = t.gallery;
+    links[6].textContent = t.github;
+    links[7].textContent = t.contact;
+    links[8].textContent = t.admin;
 
-function applyLang(language){
+  }
 
   localStorage.setItem(
     "lang",
-    language
+    lang
   );
 
-  document.documentElement.lang =
-    language;
-
-  document.documentElement.dir =
-    language === "ar"
-      ? "rtl"
-      : "ltr";
-
-  $$("[data-i18n]").forEach(element => {
-
-    const key =
-      element.dataset.i18n;
-
-    if(T[language][key]){
-      element.textContent =
-        T[language][key];
-    }
-
-  });
-
-  $("#lang").value =
-    language;
 }
 
 
-/* =====================================================
-   SKILLS
-===================================================== */
+$("#lang").onchange = event => {
 
-function renderSkills(){
+  applyLang(
+    event.target.value
+  );
 
-  const skills = [
+};
 
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "Python",
-    "C++",
-    "Java",
-    "Android",
-    "PWA",
-    "Supabase",
-    "PostgreSQL",
-    "GitHub",
-    "Responsive Design",
-    "UI/UX"
 
-  ];
-
-  $("#skillsList").innerHTML =
-    skills
-      .map(
-        skill =>
-          `<span class="skill">${skill}</span>`
-      )
-      .join("");
-
-}
-
-
-/* =====================================================
-   LOAD DATA
-===================================================== */
-
-async function loadAll(){
-
-  const [
-
-    projectResult,
-    postResult,
-    galleryResult,
-    messageResult
-
-  ] = await Promise.all([
-
-    db
-      .from("projects")
-      .select("*")
-      .order(
-        "created_at",
-        {ascending:false}
-      ),
-
-    db
-      .from("posts")
-      .select("*")
-      .order(
-        "created_at",
-        {ascending:false}
-      ),
-
-    db
-      .from("gallery")
-      .select("*")
-      .order(
-        "created_at",
-        {ascending:false}
-      ),
-
-    db
-      .from("contact_messages")
-      .select("*")
-      .order(
-        "created_at",
-        {ascending:false}
-      )
-
-  ]);
-
-  projects =
-    projectResult.data || [];
-
-  posts =
-    postResult.data || [];
-
-  gallery =
-    galleryResult.data || [];
-
-  messages =
-    messageResult.data || [];
-
-
-  renderProjects();
-
-  renderPosts();
-
-  renderGallery();
-
-  renderCategories();
-
-  renderAdmin();
-
-}
-
-
-/* =====================================================
-   PROJECTS
-===================================================== */
-
-function renderProjects(){
-
-  const search =
-    ($("#projectSearch")?.value || "")
-      .toLowerCase();
-
-  const filtered =
-    projects.filter(project => {
-
-      const text =
-        (
-          project.title +
-          " " +
-          (project.description || "") +
-          " " +
-          (project.technology || "")
-        ).toLowerCase();
-
-      return text.includes(search);
-
-    });
-
-
-  if(!filtered.length){
-
-    $("#projectsGrid").innerHTML =
-      `<div class="empty">
-        No projects yet.
-      </div>`;
-
-    return;
-  }
-
-
-  $("#projectsGrid").innerHTML =
-    filtered
-      .map(project => {
-
-        return `
-
-          <article class="card">
-
-            ${
-              project.image_url
-              ?
-              `
-              <img
-                class="project-img"
-                src="${esc(project.image_url)}"
-                alt="${esc(project.title)}"
-              >
-              `
-              :
-              ""
-            }
-
-
-            <h3>
-              ${esc(project.title)}
-            </h3>
-
-
-            <p class="muted">
-              ${esc(project.description || "")}
-            </p>
-
-
-            <div class="tags">
-
-              ${
-                (project.technology || "")
-                .split(",")
-                .filter(Boolean)
-                .map(
-                  tech =>
-                    `<span class="tag">
-                      ${esc(tech.trim())}
-                    </span>`
-                )
-                .join("")
-              }
-
-            </div>
-
-
-            ${
-              project.project_url
-              ?
-              `
-              <p>
-
-                <a
-                  class="btn"
-                  target="_blank"
-                  rel="noopener"
-                  href="${esc(project.project_url)}"
-                >
-                  Open Project ↗
-                </a>
-
-              </p>
-              `
-              :
-              ""
-            }
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =====================================================
-   POSTS
-===================================================== */
-
-function renderPosts(){
-
-  const search =
-    ($("#postSearch")?.value || "")
-      .toLowerCase();
-
-  const category =
-    $("#postCategory")?.value || "";
-
-
-  const filtered =
-    posts.filter(post => {
-
-      const text =
-        (
-          post.title +
-          " " +
-          (post.excerpt || "") +
-          " " +
-          (post.content || "")
-        ).toLowerCase();
-
-      return (
-        (!category ||
-          post.category === category)
-        &&
-        text.includes(search)
-      );
-
-    });
-
-
-  if(!filtered.length){
-
-    $("#postsGrid").innerHTML =
-      `<div class="empty">
-        No posts yet.
-      </div>`;
-
-    return;
-  }
-
-
-  $("#postsGrid").innerHTML =
-    filtered
-      .map(post => {
-
-        return `
-
-          <article class="card">
-
-            ${
-              post.image_url
-              ?
-              `
-              <img
-                class="post-img"
-                src="${esc(post.image_url)}"
-                alt="${esc(post.title)}"
-              >
-              `
-              :
-              ""
-            }
-
-
-            <span class="tag">
-              ${esc(post.category || "General")}
-            </span>
-
-
-            <h3>
-              ${esc(post.title)}
-            </h3>
-
-
-            <p class="muted">
-              ${esc(post.excerpt || "")}
-            </p>
-
-
-            <button
-              class="btn"
-              onclick="openPost('${post.id}')"
-            >
-              Read More
-            </button>
-
-          </article>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =====================================================
-   POST CATEGORIES
-===================================================== */
-
-function renderCategories(){
-
-  const categories =
-    [
-      ...new Set(
-        posts
-          .map(post => post.category)
-          .filter(Boolean)
-      )
-    ];
-
-
-  $("#postCategory").innerHTML =
-    `
-      <option value="">
-        All categories
-      </option>
-
-      ${
-        categories
-          .map(
-            category =>
-              `<option value="${esc(category)}">
-                ${esc(category)}
-              </option>`
-          )
-          .join("")
-      }
-    `;
-
-}
-
-
-/* =====================================================
-   GALLERY
-===================================================== */
-
-function renderGallery(){
-
-  const search =
-    ($("#gallerySearch")?.value || "")
-      .toLowerCase();
-
-
-  const filtered =
-    gallery.filter(item => {
-
-      const text =
-        (
-          item.caption || ""
-        )
-        .toLowerCase()
-        +
-        " " +
-        (
-          item.category || ""
-        )
-        .toLowerCase();
-
-      return text.includes(search);
-
-    });
-
-
-  if(!filtered.length){
-
-    $("#galleryGrid").innerHTML =
-      `<div class="empty">
-        No images yet.
-      </div>`;
-
-    return;
-  }
-
-
-  $("#galleryGrid").innerHTML =
-    filtered
-      .map(item => {
-
-        return `
-
-          <img
-            loading="lazy"
-            onclick="openImage('${esc(item.image_url)}')"
-            src="${esc(item.image_url)}"
-            alt="${esc(item.caption || "Gallery image")}"
-          >
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =====================================================
+/* =========================================
    ADMIN CHECK
-===================================================== */
+========================================= */
 
 async function requireAdmin(){
 
-  const {
-    data:{
-      user
+  try{
+
+    const {
+      data:{
+        user
+      },
+      error:userError
+    } =
+      await db.auth.getUser();
+
+
+    if(userError || !user){
+
+      console.error(
+        "Auth error:",
+        userError
+      );
+
+      isAdmin = false;
+
+      return false;
+
     }
-  } =
-    await db.auth.getUser();
 
 
-  if(!user){
+    console.log(
+      "Logged user:",
+      user.id,
+      user.email
+    );
+
+
+    const {
+      data,
+      error
+    } =
+      await db.rpc("is_admin");
+
+
+    console.log(
+      "Admin check:",
+      data,
+      error
+    );
+
+
+    if(error){
+
+      console.error(
+        "Admin RPC error:",
+        error
+      );
+
+      isAdmin = false;
+
+      return false;
+
+    }
+
+
+    isAdmin =
+      data === true;
+
+    return isAdmin;
+
+
+  }catch(error){
+
+    console.error(
+      "requireAdmin error:",
+      error
+    );
 
     isAdmin = false;
 
@@ -2608,32 +2311,1654 @@ async function requireAdmin(){
 
   }
 
-
-  const {
-    data:profile
-  } =
-    await db
-      .from("profiles")
-      .select("role")
-      .eq(
-        "id",
-        user.id
-      )
-      .maybeSingle();
+}
 
 
-  isAdmin =
-    profile?.role === "admin";
+/* =========================================
+   PUBLIC DATA
+========================================= */
+
+async function loadPublicData(){
+
+  try{
+
+    const [
+      projectResult,
+      postResult,
+      galleryResult
+    ] =
+      await Promise.all([
+
+        db
+          .from("projects")
+          .select("*")
+          .order(
+            "created_at",
+            {ascending:false}
+          ),
+
+        db
+          .from("posts")
+          .select("*")
+          .order(
+            "created_at",
+            {ascending:false}
+          ),
+
+        db
+          .from("gallery")
+          .select("*")
+          .order(
+            "created_at",
+            {ascending:false}
+          )
+
+      ]);
 
 
-  return isAdmin;
+    if(projectResult.error){
+      console.error(
+        "Projects:",
+        projectResult.error
+      );
+    }
+
+    if(postResult.error){
+      console.error(
+        "Posts:",
+        postResult.error
+      );
+    }
+
+    if(galleryResult.error){
+      console.error(
+        "Gallery:",
+        galleryResult.error
+      );
+    }
+
+
+    projects =
+      projectResult.data || [];
+
+    posts =
+      postResult.data || [];
+
+    gallery =
+      galleryResult.data || [];
+
+
+    renderProjects();
+    renderPosts();
+    renderGallery();
+
+
+  }catch(error){
+
+    console.error(
+      "Public load error:",
+      error
+    );
+
+  }
 
 }
 
 
-/* =====================================================
-   ADMIN LOGIN
-===================================================== */
+/* =========================================
+   ADMIN DATA
+========================================= */
+
+async function loadAdminData(){
+
+  if(!isAdmin){
+
+    console.warn(
+      "Admin data blocked."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const result =
+      await db
+        .from("contact_messages")
+        .select("*")
+        .order(
+          "created_at",
+          {ascending:false}
+        );
+
+
+    if(result.error){
+
+      console.error(
+        "Messages:",
+        result.error
+      );
+
+      messages = [];
+
+    }else{
+
+      messages =
+        result.data || [];
+
+    }
+
+
+    renderAdmin();
+
+
+  }catch(error){
+
+    console.error(
+      "Admin load error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   LOAD EVERYTHING
+========================================= */
+
+async function loadAll(){
+
+  await loadPublicData();
+
+  if(isAdmin){
+
+    await loadAdminData();
+
+  }
+
+}
+
+
+/* =========================================
+   PROJECT RENDER
+========================================= */
+
+function renderProjects(){
+
+  const grid =
+    $("#projectsGrid");
+
+  if(!projects.length){
+
+    grid.innerHTML =
+      `<div class="empty">
+        No projects available yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    projects.map(project => `
+
+      <article class="card project-card">
+
+        ${
+          project.image
+          ?
+          `<img
+            class="project-image"
+            src="${escapeHTML(project.image)}"
+            alt="${escapeHTML(project.title)}"
+            loading="lazy"
+          >`
+          :
+          ""
+        }
+
+        <h3>
+          ${escapeHTML(project.title)}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            project.description || ""
+          )}
+        </p>
+
+        <div class="card-actions">
+
+          ${
+            project.link
+            ?
+            `<a
+              href="${escapeHTML(project.link)}"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-primary btn-small"
+            >
+              View Project
+            </a>`
+            :
+            ""
+          }
+
+          ${
+            project.category
+            ?
+            `<span class="skill">
+              ${escapeHTML(project.category)}
+            </span>`
+            :
+            ""
+          }
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   POSTS RENDER
+========================================= */
+
+function renderPosts(){
+
+  const grid =
+    $("#postsGrid");
+
+  if(!posts.length){
+
+    grid.innerHTML =
+      `<div class="empty">
+        No blog posts available yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    posts.map(post => `
+
+      <article class="card post-card">
+
+        ${
+          post.image
+          ?
+          `<img
+            class="post-image"
+            src="${escapeHTML(post.image)}"
+            alt="${escapeHTML(post.title)}"
+            loading="lazy"
+          >`
+          :
+          ""
+        }
+
+        <div class="post-meta">
+
+          ${escapeHTML(
+            post.category || "Technology"
+          )}
+
+          •
+
+          ${post.created_at
+            ?
+            new Date(
+              post.created_at
+            ).toLocaleDateString()
+            :
+            ""
+          }
+
+        </div>
+
+        <h3>
+          ${escapeHTML(post.title)}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            post.excerpt ||
+            post.content ||
+            ""
+          )}
+        </p>
+
+        ${
+          post.content
+          ?
+          `<button
+            class="btn btn-primary btn-small"
+            onclick="openPost(${post.id})"
+          >
+            Read More
+          </button>`
+          :
+          ""
+        }
+
+      </article>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   POST MODAL
+========================================= */
+
+function openPost(id){
+
+  const post =
+    posts.find(
+      item =>
+        String(item.id) === String(id)
+    );
+
+  if(!post){
+    return;
+  }
+
+
+  const modal =
+    document.createElement("div");
+
+  modal.className =
+    "modal show";
+
+  modal.innerHTML = `
+
+    <div class="modal-box">
+
+      <button
+        class="modal-close"
+        onclick="this.closest('.modal').remove()"
+      >
+        ×
+      </button>
+
+      <h2>
+        ${escapeHTML(post.title)}
+      </h2>
+
+      <br>
+
+      <p>
+        ${escapeHTML(
+          post.content || ""
+        )}
+      </p>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(modal);
+
+}
+
+
+/* =========================================
+   GALLERY RENDER
+========================================= */
+
+function renderGallery(){
+
+  const grid =
+    $("#galleryGrid");
+
+  if(!gallery.length){
+
+    grid.innerHTML =
+      `<div class="empty">
+        No gallery images yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    gallery.map(item => `
+
+      <div class="gallery-item">
+
+        <img
+          src="${escapeHTML(item.image_url)}"
+          alt="${escapeHTML(item.title || "Gallery image")}"
+          loading="lazy"
+          onclick="openImage('${escapeHTML(item.image_url)}')"
+        >
+
+        ${
+          item.title
+          ?
+          `<div class="gallery-title">
+            ${escapeHTML(item.title)}
+          </div>`
+          :
+          ""
+        }
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   IMAGE MODAL
+========================================= */
+
+function openImage(url){
+
+  $("#modalImage").src =
+    url;
+
+  $("#imageModal")
+    .classList
+    .add("show");
+
+}
+
+
+$("#imageModalClose").onclick =
+  () => {
+
+    $("#imageModal")
+      .classList
+      .remove("show");
+
+  };
+
+
+$("#imageModal").onclick =
+  event => {
+
+    if(
+      event.target ===
+      $("#imageModal")
+    ){
+
+      $("#imageModal")
+        .classList
+        .remove("show");
+
+    }
+
+  };
+
+
+/* =========================================
+   ADMIN RENDER
+========================================= */
+
+function renderAdmin(){
+
+  if(!isAdmin){
+    return;
+  }
+
+
+  $("#statProjects")
+    .textContent =
+      projects.length;
+
+  $("#statPosts")
+    .textContent =
+      posts.length;
+
+  $("#statGallery")
+    .textContent =
+      gallery.length;
+
+  $("#statMessages")
+    .textContent =
+      messages.length;
+
+
+  renderAdminProjects();
+
+  renderAdminPosts();
+
+  renderAdminGallery();
+
+  renderAdminMessages();
+
+}
+
+
+/* =========================================
+   ADMIN PROJECTS
+========================================= */
+
+function renderAdminProjects(){
+
+  const list =
+    $("#adminProjectsList");
+
+
+  if(!projects.length){
+
+    list.innerHTML =
+      `<div class="empty">
+        No projects.
+      </div>`;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    projects.map(project => `
+
+      <div class="admin-item">
+
+        <div class="admin-item-content">
+
+          <strong>
+            ${escapeHTML(project.title)}
+          </strong>
+
+          <p>
+            ${escapeHTML(
+              project.description || ""
+            )}
+          </p>
+
+        </div>
+
+        <div class="admin-item-actions">
+
+          <button
+            class="btn btn-secondary btn-small"
+            onclick="editProject(${project.id})"
+          >
+            Edit
+          </button>
+
+          <button
+            class="btn btn-danger btn-small"
+            onclick="deleteProject(${project.id})"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   PROJECT CREATE / UPDATE
+========================================= */
+
+$("#projectForm").onsubmit =
+  async event => {
+
+    event.preventDefault();
+
+
+    if(!isAdmin){
+
+      toast(
+        "Admin access required."
+      );
+
+      return;
+
+    }
+
+
+    const id =
+      $("#projectId").value;
+
+
+    const payload = {
+
+      title:
+        $("#projectTitle")
+          .value
+          .trim(),
+
+      description:
+        $("#projectDescription")
+          .value
+          .trim(),
+
+      image:
+        $("#projectImage")
+          .value
+          .trim(),
+
+      link:
+        $("#projectLink")
+          .value
+          .trim(),
+
+      category:
+        $("#projectCategory")
+          .value
+          .trim()
+
+    };
+
+
+    let result;
+
+
+    if(id){
+
+      result =
+        await db
+          .from("projects")
+          .update(payload)
+          .eq("id",id);
+
+    }else{
+
+      result =
+        await db
+          .from("projects")
+          .insert(payload);
+
+    }
+
+
+    if(result.error){
+
+      console.error(
+        result.error
+      );
+
+      toast(
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    toast(
+      id
+      ?
+      "Project updated successfully."
+      :
+      "Project added successfully."
+    );
+
+
+    resetProjectForm();
+
+    await loadAll();
+
+  };
+
+
+function editProject(id){
+
+  const project =
+    projects.find(
+      item =>
+        String(item.id) === String(id)
+    );
+
+  if(!project){
+    return;
+  }
+
+
+  $("#projectId").value =
+    project.id;
+
+  $("#projectTitle").value =
+    project.title || "";
+
+  $("#projectDescription").value =
+    project.description || "";
+
+  $("#projectImage").value =
+    project.image || "";
+
+  $("#projectLink").value =
+    project.link || "";
+
+  $("#projectCategory").value =
+    project.category || "";
+
+
+  document
+    .getElementById("admin")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+function resetProjectForm(){
+
+  $("#projectForm")
+    .reset();
+
+  $("#projectId").value =
+    "";
+
+}
+
+
+$("#projectCancel").onclick =
+  resetProjectForm;
+
+
+async function deleteProject(id){
+
+  if(!isAdmin){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Delete this project?"
+    )
+  ){
+    return;
+  }
+
+
+  const result =
+    await db
+      .from("projects")
+      .delete()
+      .eq("id",id);
+
+
+  if(result.error){
+
+    toast(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Project deleted."
+  );
+
+  await loadAll();
+
+}
+
+
+/* =========================================
+   ADMIN POSTS
+========================================= */
+
+function renderAdminPosts(){
+
+  const list =
+    $("#adminPostsList");
+
+
+  if(!posts.length){
+
+    list.innerHTML =
+      `<div class="empty">
+        No blog posts.
+      </div>`;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    posts.map(post => `
+
+      <div class="admin-item">
+
+        <div class="admin-item-content">
+
+          <strong>
+            ${escapeHTML(post.title)}
+          </strong>
+
+          <p>
+            ${escapeHTML(
+              post.excerpt || ""
+            )}
+          </p>
+
+        </div>
+
+        <div class="admin-item-actions">
+
+          <button
+            class="btn btn-secondary btn-small"
+            onclick="editPost(${post.id})"
+          >
+            Edit
+          </button>
+
+          <button
+            class="btn btn-danger btn-small"
+            onclick="deletePost(${post.id})"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   POST CREATE / UPDATE
+========================================= */
+
+$("#postForm").onsubmit =
+  async event => {
+
+    event.preventDefault();
+
+
+    if(!isAdmin){
+      toast(
+        "Admin access required."
+      );
+      return;
+    }
+
+
+    const id =
+      $("#postId").value;
+
+
+    const payload = {
+
+      title:
+        $("#postTitle")
+          .value
+          .trim(),
+
+      category:
+        $("#postCategory")
+          .value
+          .trim(),
+
+      image:
+        $("#postImage")
+          .value
+          .trim(),
+
+      excerpt:
+        $("#postExcerpt")
+          .value
+          .trim(),
+
+      content:
+        $("#postContent")
+          .value
+          .trim()
+
+    };
+
+
+    let result;
+
+
+    if(id){
+
+      result =
+        await db
+          .from("posts")
+          .update(payload)
+          .eq("id",id);
+
+    }else{
+
+      result =
+        await db
+          .from("posts")
+          .insert(payload);
+
+    }
+
+
+    if(result.error){
+
+      toast(
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    toast(
+      id
+      ?
+      "Post updated."
+      :
+      "Post created."
+    );
+
+
+    resetPostForm();
+
+    await loadAll();
+
+  };
+
+
+function editPost(id){
+
+  const post =
+    posts.find(
+      item =>
+        String(item.id) === String(id)
+    );
+
+  if(!post){
+    return;
+  }
+
+
+  $("#postId").value =
+    post.id;
+
+  $("#postTitle").value =
+    post.title || "";
+
+  $("#postCategory").value =
+    post.category || "";
+
+  $("#postImage").value =
+    post.image || "";
+
+  $("#postExcerpt").value =
+    post.excerpt || "";
+
+  $("#postContent").value =
+    post.content || "";
+
+}
+
+
+function resetPostForm(){
+
+  $("#postForm")
+    .reset();
+
+  $("#postId").value =
+    "";
+
+}
+
+
+$("#postCancel").onclick =
+  resetPostForm;
+
+
+async function deletePost(id){
+
+  if(!isAdmin){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Delete this blog post?"
+    )
+  ){
+    return;
+  }
+
+
+  const result =
+    await db
+      .from("posts")
+      .delete()
+      .eq("id",id);
+
+
+  if(result.error){
+
+    toast(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Post deleted."
+  );
+
+  await loadAll();
+
+}
+
+
+/* =========================================
+   ADMIN GALLERY
+========================================= */
+
+function renderAdminGallery(){
+
+  const list =
+    $("#adminGalleryList");
+
+
+  if(!gallery.length){
+
+    list.innerHTML =
+      `<div class="empty">
+        No images.
+      </div>`;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    gallery.map(item => `
+
+      <div class="admin-item">
+
+        <div
+          class="admin-item-content"
+          style="display:flex;gap:15px;align-items:center"
+        >
+
+          <img
+            src="${escapeHTML(item.image_url)}"
+            style="
+              width:80px;
+              height:60px;
+              object-fit:cover;
+              border-radius:8px;
+            "
+            alt=""
+          >
+
+          <strong>
+            ${escapeHTML(
+              item.title || "Image"
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="admin-item-actions">
+
+          <button
+            class="btn btn-danger btn-small"
+            onclick="deleteGallery(${item.id})"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   GALLERY UPLOAD
+========================================= */
+
+$("#galleryForm").onsubmit =
+  async event => {
+
+    event.preventDefault();
+
+
+    if(!isAdmin){
+
+      toast(
+        "Admin access required."
+      );
+
+      return;
+
+    }
+
+
+    const files =
+      Array.from(
+        $("#galleryFiles").files
+      );
+
+
+    if(!files.length){
+
+      toast(
+        "Please select images."
+      );
+
+      return;
+
+    }
+
+
+    const title =
+      $("#galleryTitle")
+        .value
+        .trim();
+
+
+    let uploaded = 0;
+
+
+    for(const file of files){
+
+      try{
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const filename =
+          `${crypto.randomUUID()}.${extension}`;
+
+
+        const path =
+          `gallery/${filename}`;
+
+
+        const upload =
+          await db.storage
+            .from("portfolio-images")
+            .upload(
+              path,
+              file,
+              {
+                cacheControl:"3600",
+                upsert:false
+              }
+            );
+
+
+        if(upload.error){
+
+          console.error(
+            upload.error
+          );
+
+          continue;
+
+        }
+
+
+        const publicUrl =
+          db.storage
+            .from("portfolio-images")
+            .getPublicUrl(path)
+            .data
+            .publicUrl;
+
+
+        const insert =
+          await db
+            .from("gallery")
+            .insert({
+
+              title:
+                title ||
+                file.name,
+
+              image_url:
+                publicUrl
+
+            });
+
+
+        if(insert.error){
+
+          console.error(
+            insert.error
+          );
+
+          continue;
+
+        }
+
+
+        uploaded++;
+
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+      }
+
+    }
+
+
+    $("#galleryForm")
+      .reset();
+
+
+    toast(
+      `${uploaded} image(s) uploaded successfully.`
+    );
+
+
+    await loadAll();
+
+  };
+
+
+/* =========================================
+   DELETE GALLERY
+========================================= */
+
+async function deleteGallery(id){
+
+  if(!isAdmin){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Delete this gallery image?"
+    )
+  ){
+    return;
+  }
+
+
+  const item =
+    gallery.find(
+      image =>
+        String(image.id) === String(id)
+    );
+
+
+  const result =
+    await db
+      .from("gallery")
+      .delete()
+      .eq("id",id);
+
+
+  if(result.error){
+
+    toast(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Try to delete storage file.
+    If the old URL cannot be parsed,
+    database deletion still remains successful.
+  */
+
+  try{
+
+    if(item?.image_url){
+
+      const marker =
+        "/portfolio-images/";
+
+      const index =
+        item.image_url.indexOf(
+          marker
+        );
+
+
+      if(index !== -1){
+
+        const path =
+          item.image_url.substring(
+            index + marker.length
+          );
+
+
+        await db.storage
+          .from("portfolio-images")
+          .remove([path]);
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "Storage delete:",
+      error
+    );
+
+  }
+
+
+  toast(
+    "Gallery image deleted."
+  );
+
+
+  await loadAll();
+
+}
+
+
+/* =========================================
+   CONTACT FORM
+========================================= */
+
+$("#contactForm").onsubmit =
+  async event => {
+
+    event.preventDefault();
+
+
+    const name =
+      $("#contactName")
+        .value
+        .trim();
+
+    const email =
+      $("#contactEmail")
+        .value
+        .trim();
+
+    const message =
+      $("#contactMessage")
+        .value
+        .trim();
+
+
+    if(!name || !message){
+
+      toast(
+        "Name and message are required."
+      );
+
+      return;
+
+    }
+
+
+    const result =
+      await db
+        .from("contact_messages")
+        .insert({
+
+          name,
+          email,
+          message
+
+        });
+
+
+    if(result.error){
+
+      console.error(
+        result.error
+      );
+
+      toast(
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    $("#contactForm")
+      .reset();
+
+
+    toast(
+      "Message sent successfully! 🎉"
+    );
+
+  };
+
+
+/* =========================================
+   ADMIN MESSAGES
+========================================= */
+
+function renderAdminMessages(){
+
+  const list =
+    $("#adminMessagesList");
+
+
+  if(!messages.length){
+
+    list.innerHTML =
+      `<div class="empty">
+        No messages yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    messages.map(message => `
+
+      <div class="admin-item">
+
+        <div class="admin-item-content">
+
+          <strong>
+            ${escapeHTML(message.name)}
+          </strong>
+
+          <p>
+            ${
+              message.email
+              ?
+              escapeHTML(message.email)
+              :
+              "No email"
+            }
+          </p>
+
+          <p class="message-box">
+            ${escapeHTML(message.message)}
+          </p>
+
+          <small>
+            ${
+              message.created_at
+              ?
+              new Date(
+                message.created_at
+              ).toLocaleString()
+              :
+              ""
+            }
+          </small>
+
+        </div>
+
+
+        <div class="admin-item-actions">
+
+          <button
+            class="btn btn-danger btn-small"
+            onclick="deleteMessage(${message.id})"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================
+   DELETE MESSAGE
+========================================= */
+
+async function deleteMessage(id){
+
+  if(!isAdmin){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Delete this message?"
+    )
+  ){
+    return;
+  }
+
+
+  const result =
+    await db
+      .from("contact_messages")
+      .delete()
+      .eq("id",id);
+
+
+  if(result.error){
+
+    toast(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Message deleted."
+  );
+
+
+  await loadAdminData();
+
+}
+
+
+/* =========================================
+   ADMIN TABS
+========================================= */
+
+document
+  .querySelectorAll(".admin-tab[data-tab]")
+  .forEach(button => {
+
+    button.onclick = () => {
+
+      document
+        .querySelectorAll(
+          ".admin-tab[data-tab]"
+        )
+        .forEach(btn =>
+          btn.classList.remove(
+            "active"
+          )
+        );
+
+
+      document
+        .querySelectorAll(
+          ".admin-panel"
+        )
+        .forEach(panel =>
+          panel.classList.remove(
+            "active"
+          )
+        );
+
+
+      button.classList.add(
+        "active"
+      );
+
+
+      const panel =
+        document.getElementById(
+          button.dataset.tab
+        );
+
+
+      if(panel){
+
+        panel.classList.add(
+          "active"
+        );
+
+      }
+
+    };
+
+  });
+
+
+/* =========================================
+   LOGIN
+========================================= */
 
 $("#loginForm").onsubmit =
   async event => {
@@ -2642,30 +3967,60 @@ $("#loginForm").onsubmit =
 
 
     const email =
-      $("#loginEmail").value;
+      $("#loginEmail")
+        .value
+        .trim();
 
     const password =
-      $("#loginPassword").value;
+      $("#loginPassword")
+        .value;
 
 
-    const {
-      error
-    } =
-      await db.auth.signInWithPassword({
+    if(!email || !password){
 
-        email,
-        password
-
-      });
-
-
-    if(error){
-
-      toast(error.message);
+      toast(
+        "Email fi password guuti."
+      );
 
       return;
 
     }
+
+
+    const {
+      data,
+      error
+    } =
+      await db.auth
+        .signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+    if(error){
+
+      console.error(
+        "Login error:",
+        error
+      );
+
+      toast(
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    console.log(
+      "Login successful:",
+      data.user?.id,
+      data.user?.email
+    );
 
 
     const admin =
@@ -2695,19 +4050,19 @@ $("#loginForm").onsubmit =
       .remove("hidden");
 
 
-    await loadAll();
+    await loadAdminData();
 
 
     toast(
-      "Admin login successful."
+      "Admin login successful! 🎉"
     );
 
   };
 
 
-/* =====================================================
+/* =========================================
    LOGOUT
-===================================================== */
+========================================= */
 
 $("#logoutBtn").onclick =
   async () => {
@@ -2724,952 +4079,192 @@ $("#logoutBtn").onclick =
       .classList
       .remove("hidden");
 
-    toast("Logged out.");
-
-  };
-
-
-/* =====================================================
-   PROJECT CREATE / UPDATE
-===================================================== */
-
-$("#projectForm").onsubmit =
-  async event => {
-
-    event.preventDefault();
-
-
-    if(!isAdmin){
-
-      toast(
-        "Admin login required."
-      );
-
-      return;
-
-    }
-
-
-    const id =
-      $("#projectId").value;
-
-
-    const data = {
-
-      title:
-        $("#projectTitle").value,
-
-      description:
-        $("#projectDescription").value,
-
-      technology:
-        $("#projectTech").value,
-
-      image_url:
-        $("#projectImage").value || null,
-
-      project_url:
-        $("#projectUrl").value || null
-
-    };
-
-
-    let result;
-
-
-    if(id){
-
-      result =
-        await db
-          .from("projects")
-          .update(data)
-          .eq("id",id);
-
-    }else{
-
-      result =
-        await db
-          .from("projects")
-          .insert(data);
-
-    }
-
-
-    if(result.error){
-
-      toast(
-        result.error.message
-      );
-
-      return;
-
-    }
-
-
-    $("#projectReset").click();
-
-    await loadAll();
 
     toast(
-      "Project saved."
+      "Logged out successfully."
     );
 
   };
 
 
-$("#projectReset").onclick =
-  () => {
+/* =========================================
+   AUTH STATE
+========================================= */
 
-    $("#projectForm").reset();
-
-    $("#projectId").value = "";
-
-  };
-
-
-/* =====================================================
-   EDIT PROJECT
-===================================================== */
-
-window.editProject =
-  id => {
-
-    const project =
-      projects.find(
-        item => item.id === id
-      );
-
-
-    if(!project) return;
-
-
-    $("#projectId").value =
-      project.id;
-
-    $("#projectTitle").value =
-      project.title || "";
-
-    $("#projectDescription").value =
-      project.description || "";
-
-    $("#projectTech").value =
-      project.technology || "";
-
-    $("#projectImage").value =
-      project.image_url || "";
-
-    $("#projectUrl").value =
-      project.project_url || "";
-
-
-    $("#projectPanel")
-      .scrollIntoView({
-        behavior:"smooth"
-      });
-
-  };
-
-
-/* =====================================================
-   DELETE PROJECT
-===================================================== */
-
-window.deleteProject =
-  async id => {
+db.auth.onAuthStateChange(
+  async (event, session) => {
 
     if(
-      !confirm(
-        "Delete this project?"
-      )
-    ) return;
+      session &&
+      event !== "SIGNED_OUT"
+    ){
 
+      const admin =
+        await requireAdmin();
 
-    const {
-      error
-    } =
-      await db
-        .from("projects")
-        .delete()
-        .eq("id",id);
 
+      if(admin){
 
-    if(error){
+        $("#loginBox")
+          .classList
+          .add("hidden");
 
-      toast(error.message);
+        $("#dashboard")
+          .classList
+          .remove("hidden");
 
-      return;
-
-    }
-
-
-    await loadAll();
-
-    toast(
-      "Project deleted."
-    );
-
-  };
-
-
-/* =====================================================
-   POST CREATE / UPDATE
-===================================================== */
-
-$("#postForm").onsubmit =
-  async event => {
-
-    event.preventDefault();
-
-
-    if(!isAdmin){
-
-      toast(
-        "Admin login required."
-      );
-
-      return;
-
-    }
-
-
-    const id =
-      $("#postId").value;
-
-
-    const data = {
-
-      title:
-        $("#postTitle").value,
-
-      category:
-        $("#postCategoryInput").value ||
-        "General",
-
-      excerpt:
-        $("#postExcerpt").value,
-
-      content:
-        $("#postContent").value,
-
-      image_url:
-        $("#postImage").value || null
-
-    };
-
-
-    let result;
-
-
-    if(id){
-
-      result =
-        await db
-          .from("posts")
-          .update(data)
-          .eq("id",id);
-
-    }else{
-
-      result =
-        await db
-          .from("posts")
-          .insert(data);
-
-    }
-
-
-    if(result.error){
-
-      toast(
-        result.error.message
-      );
-
-      return;
-
-    }
-
-
-    $("#postReset").click();
-
-    await loadAll();
-
-    toast(
-      "Post saved."
-    );
-
-  };
-
-
-$("#postReset").onclick =
-  () => {
-
-    $("#postForm").reset();
-
-    $("#postId").value = "";
-
-  };
-
-
-/* =====================================================
-   EDIT POST
-===================================================== */
-
-window.editPost =
-  id => {
-
-    const post =
-      posts.find(
-        item => item.id === id
-      );
-
-
-    if(!post) return;
-
-
-    $("#postId").value =
-      post.id;
-
-    $("#postTitle").value =
-      post.title || "";
-
-    $("#postCategoryInput").value =
-      post.category || "";
-
-    $("#postExcerpt").value =
-      post.excerpt || "";
-
-    $("#postContent").value =
-      post.content || "";
-
-    $("#postImage").value =
-      post.image_url || "";
-
-
-    $("#postPanel")
-      .scrollIntoView({
-        behavior:"smooth"
-      });
-
-  };
-
-
-/* =====================================================
-   DELETE POST
-===================================================== */
-
-window.deletePost =
-  async id => {
-
-    if(
-      !confirm(
-        "Delete this post?"
-      )
-    ) return;
-
-
-    const {
-      error
-    } =
-      await db
-        .from("posts")
-        .delete()
-        .eq("id",id);
-
-
-    if(error){
-
-      toast(error.message);
-
-      return;
-
-    }
-
-
-    await loadAll();
-
-    toast(
-      "Post deleted."
-    );
-
-  };
-
-
-/* =====================================================
-   MULTIPLE IMAGE UPLOAD
-===================================================== */
-
-$("#uploadForm").onsubmit =
-  async event => {
-
-    event.preventDefault();
-
-
-    if(!isAdmin){
-
-      toast(
-        "Admin login required."
-      );
-
-      return;
-
-    }
-
-
-    const files =
-      [
-        ...$("#imageFiles").files
-      ];
-
-
-    if(!files.length){
-
-      toast(
-        "Choose images first."
-      );
-
-      return;
-
-    }
-
-
-    const caption =
-      $("#galleryCaption").value;
-
-    const category =
-      $("#galleryCategory").value ||
-      "General";
-
-
-    let uploaded = 0;
-
-
-    for(const file of files){
-
-      try{
-
-        const extension =
-          (
-            file.name
-              .split(".")
-              .pop()
-            ||
-            "jpg"
-          )
-          .toLowerCase();
-
-
-        const path =
-          `${crypto.randomUUID()}.${extension}`;
-
-
-        const upload =
-          await db.storage
-            .from("portfolio-images")
-            .upload(
-              path,
-              file,
-              {
-                upsert:false,
-                contentType:file.type
-              }
-            );
-
-
-        if(upload.error){
-
-          toast(
-            upload.error.message
-          );
-
-          continue;
-
-        }
-
-
-        const {
-          data:url
-        } =
-          db.storage
-            .from("portfolio-images")
-            .getPublicUrl(path);
-
-
-        const insert =
-          await db
-            .from("gallery")
-            .insert({
-
-              image_url:
-                url.publicUrl,
-
-              caption,
-
-              category,
-
-              storage_path:
-                path
-
-            });
-
-
-        if(insert.error){
-
-          await db.storage
-            .from("portfolio-images")
-            .remove([path]);
-
-          toast(
-            insert.error.message
-          );
-
-          continue;
-
-        }
-
-
-        uploaded++;
-
-      }catch(error){
-
-        toast(
-          error.message
-        );
+        await loadAdminData();
 
       }
 
     }
 
 
-    $("#uploadForm").reset();
+    if(!session){
 
-    await loadAll();
+      isAdmin = false;
 
-
-    toast(
-      `${uploaded} image(s) uploaded.`
-    );
-
-  };
-
-
-/* =====================================================
-   DELETE GALLERY IMAGE
-===================================================== */
-
-window.deleteGallery =
-  async (
-    id,
-    storagePath
-  ) => {
-
-    if(
-      !confirm(
-        "Delete this image?"
-      )
-    ) return;
-
-
-    const {
-      error
-    } =
-      await db
-        .from("gallery")
-        .delete()
-        .eq("id",id);
-
-
-    if(error){
-
-      toast(error.message);
-
-      return;
-
-    }
-
-
-    if(storagePath){
-
-      await db.storage
-        .from("portfolio-images")
-        .remove([
-          storagePath
-        ]);
-
-    }
-
-
-    await loadAll();
-
-    toast(
-      "Image deleted."
-    );
-
-  };
-
-
-/* =====================================================
-   CONTACT FORM
-===================================================== */
-
-$("#contactForm").onsubmit =
-  async event => {
-
-    event.preventDefault();
-
-
-    const {
-      error
-    } =
-      await db
-        .from("contact_messages")
-        .insert({
-
-          name:
-            $("#cName").value,
-
-          email:
-            $("#cEmail").value,
-
-          subject:
-            $("#cSubject").value,
-
-          message:
-            $("#cMessage").value
-
-        });
-
-
-    if(error){
-
-      toast(
-        error.message
-      );
-
-      return;
-
-    }
-
-
-    event.target.reset();
-
-
-    toast(
-      "Message sent successfully."
-    );
-
-  };
-
-
-/* =====================================================
-   DELETE MESSAGE
-===================================================== */
-
-window.deleteMessage =
-  async id => {
-
-    if(!isAdmin) return;
-
-
-    if(
-      !confirm(
-        "Delete this message?"
-      )
-    ) return;
-
-
-    const {
-      error
-    } =
-      await db
-        .from("contact_messages")
-        .delete()
-        .eq("id",id);
-
-
-    if(error){
-
-      toast(
-        error.message
-      );
-
-      return;
-
-    }
-
-
-    await loadAll();
-
-    toast(
-      "Message deleted."
-    );
-
-  };
-
-
-/* =====================================================
-   IMAGE MODAL
-===================================================== */
-
-window.openImage =
-  url => {
-
-    $("#modalImg").src =
-      url;
-
-    $("#imageModal")
-      .classList
-      .add("show");
-
-  };
-
-
-window.closeImage =
-  () => {
-
-    $("#imageModal")
-      .classList
-      .remove("show");
-
-  };
-
-
-/* =====================================================
-   POST MODAL
-===================================================== */
-
-window.openPost =
-  id => {
-
-    const post =
-      posts.find(
-        item => item.id === id
-      );
-
-
-    if(!post) return;
-
-
-    $("#modalPostTitle")
-      .textContent =
-      post.title;
-
-
-    $("#modalPostMeta")
-      .textContent =
-      `${post.category || "General"} • ${
-        post.created_at
-          ? new Date(
-              post.created_at
-            ).toLocaleDateString()
-          : ""
-      }`;
-
-
-    $("#modalPostContent")
-      .innerHTML =
-      esc(
-        post.content || ""
-      )
-      .replace(
-        /\n/g,
-        "<br>"
-      );
-
-
-    if(post.image_url){
-
-      $("#modalPostImg")
-        .src =
-        post.image_url;
-
-      $("#modalPostImg")
+      $("#loginBox")
         .classList
         .remove("hidden");
 
-    }else{
-
-      $("#modalPostImg")
+      $("#dashboard")
         .classList
         .add("hidden");
 
     }
 
-
-    $("#postModal")
-      .classList
-      .add("show");
-
-  };
+  }
+);
 
 
-window.closePost =
-  () => {
-
-    $("#postModal")
-      .classList
-      .remove("show");
-
-  };
-
-
-/* =====================================================
+/* =========================================
    GITHUB
-===================================================== */
+========================================= */
 
-async function loadGithub(
-  username
-){
+async function loadGithub(username){
 
   if(!username){
 
-    $("#githubBox").innerHTML =
-      `
-      <p class="muted">
-        Set a GitHub username from Admin → GitHub.
-      </p>
-      `;
+    $("#githubRepos").innerHTML =
+      `<div class="empty">
+        Enter a GitHub username.
+      </div>`;
 
     return;
 
   }
 
 
+  $("#githubRepos").innerHTML =
+    `<div class="empty">
+      Loading GitHub repositories...
+    </div>`;
+
+
   try{
 
-    const user =
+    const response =
       await fetch(
-        `https://api.github.com/users/${encodeURIComponent(username)}`
-      )
-      .then(response => {
-
-        if(!response.ok)
-          throw new Error();
-
-        return response.json();
-
-      });
-
-
-    const repos =
-      await fetch(
-        `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=8`
-      )
-      .then(response =>
-        response.ok
-          ? response.json()
-          : []
+        `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=9`
       );
 
 
-    $("#githubBox").innerHTML =
-      `
+    if(!response.ok){
 
-      <div class="card">
+      throw new Error(
+        "GitHub user not found."
+      );
 
-        <h3>
-          ${esc(
-            user.name ||
-            user.login
-          )}
-        </h3>
-
-        <p class="muted">
-          ${esc(
-            user.bio ||
-            "GitHub profile"
-          )}
-        </p>
-
-        <p>
-          📦
-          ${user.public_repos}
-          public repos
-
-          •
-
-          👥
-          ${user.followers}
-          followers
-        </p>
-
-        <a
-          class="btn"
-          target="_blank"
-          rel="noopener"
-          href="${esc(user.html_url)}"
-        >
-          Open GitHub ↗
-        </a>
-
-      </div>
+    }
 
 
-      <div
-        class="grid"
-        style="margin-top:15px"
-      >
+    const repos =
+      await response.json();
 
-        ${
-          repos
-            .map(repo => `
 
-              <div class="card">
+    if(!repos.length){
 
-                <h3>
-                  ${esc(repo.name)}
-                </h3>
+      $("#githubRepos").innerHTML =
+        `<div class="empty">
+          No repositories found.
+        </div>`;
 
-                <p class="muted">
-                  ${esc(
-                    repo.description ||
-                    "No description"
-                  )}
-                </p>
+      return;
 
-                <a
-                  class="btn alt"
-                  target="_blank"
-                  rel="noopener"
-                  href="${esc(repo.html_url)}"
-                >
-                  Repository ↗
-                </a>
+    }
 
-              </div>
 
-            `)
-            .join("")
-        }
+    $("#githubRepos").innerHTML =
+      repos.map(repo => `
 
-      </div>
+        <article class="card">
 
-      `;
+          <h3>
+            ${escapeHTML(repo.name)}
+          </h3>
 
-  }catch{
+          <p>
+            ${escapeHTML(
+              repo.description ||
+              "No description."
+            )}
+          </p>
 
-    toast(
-      "Could not load GitHub profile."
+          <p>
+            ⭐ ${repo.stargazers_count}
+            &nbsp;
+            🍴 ${repo.forks_count}
+          </p>
+
+          <a
+            href="${escapeHTML(repo.html_url)}"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary btn-small"
+          >
+            View on GitHub
+          </a>
+
+        </article>
+
+      `).join("");
+
+
+  }catch(error){
+
+    console.error(
+      error
     );
+
+    $("#githubRepos").innerHTML =
+      `<div class="empty">
+        ${escapeHTML(error.message)}
+      </div>`;
 
   }
 
 }
 
 
-/* =====================================================
-   SAVE GITHUB USERNAME
-===================================================== */
-
-$("#githubForm").onsubmit =
-  event => {
-
-    event.preventDefault();
-
+$("#githubBtn").onclick =
+  () => {
 
     const username =
       $("#githubUsername")
         .value
         .trim();
+
+
+    if(!username){
+
+      toast(
+        "Enter GitHub username."
+      );
+
+      return;
+
+    }
 
 
     localStorage.setItem(
@@ -3680,227 +4275,82 @@ $("#githubForm").onsubmit =
 
     loadGithub(username);
 
-
-    toast(
-      "GitHub username saved."
-    );
-
   };
 
 
-/* =====================================================
-   ADMIN TABS
-===================================================== */
+/* =========================================
+   INIT
+========================================= */
 
-$$(".tab").forEach(
-  button => {
+async function init(){
 
-    button.onclick = () => {
-
-      if(!button.dataset.tab)
-        return;
-
-
-      $$(".tab")
-        .forEach(
-          item =>
-            item.classList
-              .remove("active")
-        );
-
-
-      $$(".admin-panel")
-        .forEach(
-          panel =>
-            panel.classList
-              .remove("active")
-        );
-
-
-      button.classList
-        .add("active");
-
-
-      const panel =
-        $("#" + button.dataset.tab);
-
-
-      if(panel)
-        panel.classList
-          .add("active");
-
-    };
-
-  }
-);
-
-
-/* =====================================================
-   DARK MODE
-===================================================== */
-
-$("#themeBtn").onclick =
-  () => {
-
-    document.body
-      .classList
-      .toggle("dark");
-
-
-    const dark =
-      document.body
-        .classList
-        .contains("dark");
-
-
-    localStorage.setItem(
-      "theme",
-      dark
-        ? "dark"
-        : "light"
-    );
-
-
-    $("#themeBtn")
-      .textContent =
-      dark
-        ? "☀️"
-        : "🌙";
-
-  };
-
-
-/* =====================================================
-   MOBILE MENU
-===================================================== */
-
-$("#menuBtn").onclick =
-  () => {
-
-    $("#navLinks")
-      .classList
-      .toggle("open");
-
-  };
-
-
-$$(".links a").forEach(
-  link => {
-
-    link.onclick =
-      () => {
-
-        $("#navLinks")
-          .classList
-          .remove("open");
-
-      };
-
-  }
-);
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-$("#projectSearch").oninput =
-  renderProjects;
-
-$("#postSearch").oninput =
-  renderPosts;
-
-$("#postCategory").onchange =
-  renderPosts;
-
-$("#gallerySearch").oninput =
-  renderGallery;
-
-
-/* =====================================================
-   YEAR
-===================================================== */
-
-$("#year").textContent =
-  new Date().getFullYear();
-
-
-/* =====================================================
-   INITIAL SETTINGS
-===================================================== */
-
-renderSkills();
-
-
-applyLang(
-  localStorage.getItem("lang")
-  || "en"
-);
-
-
-if(
-  localStorage.getItem("theme")
-  === "dark"
-){
-
-  document.body
-    .classList
-    .add("dark");
-
-  $("#themeBtn")
+  $("#year")
     .textContent =
-    "☀️";
-
-}
+      new Date().getFullYear();
 
 
-$("#githubUsername").value =
-  localStorage.getItem(
-    "githubUsername"
-  )
-  || "";
+  renderSkills();
 
 
-/* =====================================================
-   LOAD SUPABASE
-===================================================== */
-
-loadAll();
-
-
-loadGithub(
-  localStorage.getItem(
-    "githubUsername"
-  )
-  || ""
-);
+  const savedLang =
+    localStorage.getItem(
+      "lang"
+    ) || "en";
 
 
-/* =====================================================
-   LANGUAGE EVENT
-===================================================== */
+  $("#lang").value =
+    savedLang;
 
-$("#lang").onchange =
-  event =>
-    applyLang(
-      event.target.value
+
+  applyLang(
+    savedLang
+  );
+
+
+  applyTheme();
+
+
+  const savedGithub =
+    localStorage.getItem(
+      "githubUsername"
+    ) || "";
+
+
+  $("#githubUsername").value =
+    savedGithub;
+
+
+  await loadPublicData();
+
+
+  if(savedGithub){
+
+    loadGithub(
+      savedGithub
     );
 
+  }
 
-/* =====================================================
-   SUPABASE AUTH STATE
-===================================================== */
 
-db.auth.onAuthStateChange(
-  async (
-    event,
-    session
-  ) => {
+  /*
+    Check existing session.
+  */
 
-    if(
-      session &&
-      await requireAdmin()
-    ){
+  const {
+    data:{
+      session
+    }
+  } =
+    await db.auth.getSession();
+
+
+  if(session){
+
+    const admin =
+      await requireAdmin();
+
+
+    if(admin){
 
       $("#loginBox")
         .classList
@@ -3910,17 +4360,21 @@ db.auth.onAuthStateChange(
         .classList
         .remove("hidden");
 
-      await loadAll();
+      await loadAdminData();
 
     }
 
   }
-);
+
+}
 
 
-/* =====================================================
-   PWA SERVICE WORKER
-===================================================== */
+init();
+
+
+/* =========================================
+   SERVICE WORKER
+========================================= */
 
 if(
   "serviceWorker"
@@ -3933,13 +4387,21 @@ if(
 
       navigator.serviceWorker
         .register("./sw.js")
-        .catch(
-          error =>
-            console.warn(
-              "SW:",
-              error
-            )
-        );
+        .then(() => {
+
+          console.log(
+            "Service Worker registered."
+          );
+
+        })
+        .catch(error => {
+
+          console.warn(
+            "Service Worker:",
+            error
+          );
+
+        });
 
     }
   );
@@ -3948,5 +4410,7 @@ if(
 
 </script>
 
+
 </body>
+
   </html>
